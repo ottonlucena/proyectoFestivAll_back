@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Juego {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "juego_id")
     private Long id;
     private String nombre;
     private String descripcion;
@@ -17,14 +18,14 @@ public class Juego {
     private float altura;
     private int capacidad;
     @Column(name = "valor_arriendo")
-    private float valorArriendo;
+    private int valorArriendo;
     private int cantidad;
     private String img_url;
 
     public Juego() {
     }
 
-    public Juego(String nombre, String descripcion, float largo, float ancho, float altura, int capacidad, float valorArriendo, int cantidad, String img_url) {
+    public Juego(String nombre, String descripcion, float largo, float ancho, float altura, int capacidad, int valorArriendo, int cantidad, String img_url) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.largo = largo;
@@ -34,6 +35,14 @@ public class Juego {
         this.valorArriendo = valorArriendo;
         this.cantidad = cantidad;
         this.img_url = img_url;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -88,7 +97,7 @@ public class Juego {
         return valorArriendo;
     }
 
-    public void setValorArriendo(float valorArriendo) {
+    public void setValorArriendo(int valorArriendo) {
         this.valorArriendo = valorArriendo;
     }
 

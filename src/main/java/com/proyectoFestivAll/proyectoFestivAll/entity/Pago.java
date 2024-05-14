@@ -7,40 +7,28 @@ import jakarta.persistence.*;
 public class Pago {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pago_id")
     private Long id;
-    @OneToOne
+    /*@OneToOne
     @JoinColumn(name = "reserva_id")
-    private Reserva reserva;
+    private Reserva reserva;*/
     @OneToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id")
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "metodo_pago")
     private MetodoPago metodoPago;
-    private float monto_pago;
+    @Column(name = "monto_pago")
+    private float montoPago;
 
     public Pago() {
     }
 
-    public Pago(Reserva reserva, Usuario usuario, MetodoPago metodoPago, float monto_pago) {
-        this.reserva = reserva;
+    public Pago(Usuario usuario, MetodoPago metodoPago, float montoPago) {
         this.usuario = usuario;
         this.metodoPago = metodoPago;
-        this.monto_pago = monto_pago;
-    }
-
-    public Reserva getReserva() {
-        return reserva;
-    }
-
-    public void setReserva(Reserva reserva) {
-        this.reserva = reserva;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+        this.montoPago = montoPago;
     }
 
     public MetodoPago getMetodoPago() {
@@ -51,22 +39,30 @@ public class Pago {
         this.metodoPago = metodoPago;
     }
 
-    public float getMonto_pago() {
-        return monto_pago;
+    public float getMontoPago() {
+        return montoPago;
     }
 
-    public void setMonto_pago(float monto_pago) {
-        this.monto_pago = monto_pago;
+    public void setMontoPago(float montoPago) {
+        this.montoPago = montoPago;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     @Override
     public String toString() {
         return "Pago{" +
                 "id=" + id +
-                ", reserva=" + reserva +
                 ", usuario=" + usuario +
                 ", metodoPago=" + metodoPago +
-                ", monto_pago=" + monto_pago +
+                ", montoPago=" + montoPago +
                 '}';
     }
 }

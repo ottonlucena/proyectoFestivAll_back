@@ -20,18 +20,21 @@ public class Usuario {
     private String email;
     private String direccion;
 
+   @OneToOne(mappedBy = "usuario")
+   private Pago pago;
+
 
     public Usuario() {
     }
 
-    public Usuario(String rut, String nombre, String apellido, String telefono, String email, String direccion, Rol rol, Pago pago) {
+    public Usuario(String rut, String nombre, String apellido, String telefono, String email, String direccion, Pago pago) {
         this.rut = rut;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
         this.email = email;
         this.direccion = direccion;
-
+        this.pago = pago;
     }
 
     public Long getId() {
@@ -90,7 +93,13 @@ public class Usuario {
         this.direccion = direccion;
     }
 
+    public Pago getPago() {
+        return pago;
+    }
 
+    public void setPago(Pago pago) {
+        this.pago = pago;
+    }
 
     @Override
     public String toString() {
@@ -101,20 +110,8 @@ public class Usuario {
                 ", apellido='" + apellido + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", email='" + email + '\'' +
-                ", direccion='" + direccion + '\''
-              ;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Usuario usuario = (Usuario) o;
-        return Objects.equals(id, usuario.id) && Objects.equals(rut, usuario.rut) && Objects.equals(nombre, usuario.nombre) && Objects.equals(apellido, usuario.apellido) && Objects.equals(telefono, usuario.telefono) && Objects.equals(email, usuario.email) && Objects.equals(direccion, usuario.direccion);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, rut, nombre, apellido, telefono, email, direccion);
+                ", direccion='" + direccion + '\'' +
+                ", pago=" + pago +
+                '}';
     }
 }
