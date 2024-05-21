@@ -1,10 +1,17 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
 import jakarta.persistence.*;
-
-import java.util.Objects;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Table(name= "usuarios")
 public class Usuario {
     @Id
@@ -12,106 +19,21 @@ public class Usuario {
     @Column(name = "usuario_id")
     private Long id;
     @Column(unique = true)
+    @NotBlank(message = "Por favor ingresar un rut")
     private String rut;
+    @Length(min = 3, max = 15)
     private String nombre;
+    @Length(min = 3, max = 15)
     private String apellido;
     private String telefono;
+    @NotBlank(message = "Por favor ingresar un correo electronico")
+    @Email
     @Column(unique = true)
     private String email;
     private String direccion;
+    @OneToOne(mappedBy = "usuario")
+    private Pago pago;
+    @NotBlank(message = "Debe ingresar una constraseña")
+    private String password;
 
-   @OneToOne(mappedBy = "usuario")
-   private Pago pago;
-
-
-    public Usuario() {
-    }
-
-    public Usuario(String rut, String nombre, String apellido, String telefono, String email, String direccion, Pago pago) {
-        this.rut = rut;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.telefono = telefono;
-        this.email = email;
-        this.direccion = direccion;
-        this.pago = pago;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRut() {
-        return rut;
-    }
-
-    public void setRut(String rut) {
-        this.rut = rut;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public Pago getPago() {
-        return pago;
-    }
-
-    public void setPago(Pago pago) {
-        this.pago = pago;
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", rut='" + rut + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", email='" + email + '\'' +
-                ", direccion='" + direccion + '\'' +
-                ", pago=" + pago +
-                '}';
-    }
 }

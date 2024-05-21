@@ -1,148 +1,57 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
+//import com.proyectoFestivAll.proyectoFestivAll.validation.ValidTipoJuego;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
 
-import java.util.Objects;
+import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Table(name = "juegos")
 public class Juego {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "juego_id")
     private Long id;
+    @NotBlank(message = "Debe ingresar un nombre")
     private String nombre;
+    @NotBlank(message = "Debe ingresar una descripción")
     private String descripcion;
+    @NotNull(message = "Debe ingresar un largo")
+    @Positive(message = "El largo debe ser un valor positivo")
     private float largo;
+    @NotNull(message = "Debe ingresar un ancho")
+    @Positive(message = "El ancho debe ser un valor positivo")
     private float ancho;
+    @NotNull(message = "Debe ingresar una altura")
+    @Positive(message = "La altura debe ser un valor positivo")
     private float altura;
+    @NotNull(message = "Debe ingresar una capacidad")
+    @Positive(message = "La capacidad debe ser un valor positivo")
     private int capacidad;
     @Column(name = "valor_arriendo")
+    @NotNull(message = "Debe ingresar un valor de arriendo")
+    @Positive(message = "Valor de arriendo debe ser positivo")
     private int valorArriendo;
+    @NotNull(message = "Debe una cantidad")
+    @Positive(message = "La cantidad debe ser un valor positivo")
     private int cantidad;
+    @NotBlank(message = "Debe ingresar cargar un imagen")
     private String img_url;
+    @ManyToOne
+    @JoinColumn(name = "tipo_juegos_id", nullable = false)
+    @NotNull(message = "Debe elegir un tipo de juego")
+    @With
+    private TipoJuegoEntity tipo;
+    private String caracteristicas;
 
-    public Juego() {
-    }
 
-    public Juego(String nombre, String descripcion, float largo, float ancho, float altura, int capacidad, int valorArriendo, int cantidad, String img_url) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.largo = largo;
-        this.ancho = ancho;
-        this.altura = altura;
-        this.capacidad = capacidad;
-        this.valorArriendo = valorArriendo;
-        this.cantidad = cantidad;
-        this.img_url = img_url;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public float getLargo() {
-        return largo;
-    }
-
-    public void setLargo(float largo) {
-        this.largo = largo;
-    }
-
-    public float getAncho() {
-        return ancho;
-    }
-
-    public void setAncho(float ancho) {
-        this.ancho = ancho;
-    }
-
-    public float getAltura() {
-        return altura;
-    }
-
-    public void setAltura(float altura) {
-        this.altura = altura;
-    }
-
-    public int getCapacidad() {
-        return capacidad;
-    }
-
-    public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
-    }
-
-    public float getValorArriendo() {
-        return valorArriendo;
-    }
-
-    public void setValorArriendo(int valorArriendo) {
-        this.valorArriendo = valorArriendo;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public String getImg_url() {
-        return img_url;
-    }
-
-    public void setImg_url(String img_url) {
-        this.img_url = img_url;
-    }
-
-    @Override
-    public String toString() {
-        return "Juego{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                ", largo=" + largo +
-                ", ancho=" + ancho +
-                ", altura=" + altura +
-                ", capacidad=" + capacidad +
-                ", valorArriendo=" + valorArriendo +
-                ", cantidad=" + cantidad +
-                ", img_url='" + img_url + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Juego juego = (Juego) o;
-        return Float.compare(juego.largo, largo) == 0 && Float.compare(juego.ancho, ancho) == 0 && Float.compare(juego.altura, altura) == 0 && capacidad == juego.capacidad && Float.compare(juego.valorArriendo, valorArriendo) == 0 && cantidad == juego.cantidad && Objects.equals(id, juego.id) && Objects.equals(nombre, juego.nombre) && Objects.equals(descripcion, juego.descripcion) && Objects.equals(img_url, juego.img_url);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, nombre, descripcion, largo, ancho, altura, capacidad, valorArriendo, cantidad, img_url);
-    }
 }
