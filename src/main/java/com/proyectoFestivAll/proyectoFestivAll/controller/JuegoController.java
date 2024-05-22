@@ -65,6 +65,14 @@ public class JuegoController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Juego> obtenerJuegoPorId(@PathVariable Long id) {
+        Optional<Juego> juegoOptional = juegoService.buscarJuegoId(id);
+        return juegoOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
     @GetMapping("/type")
     public ResponseEntity<?> getGamesByType(@RequestParam("type") String tipo) {
         List<Juego> juegos = juegoService.buscarJuegosPorTipo(tipo);

@@ -1,6 +1,7 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
 //import com.proyectoFestivAll.proyectoFestivAll.validation.ValidTipoJuego;
+import com.proyectoFestivAll.proyectoFestivAll.converter.ConversionLista;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -51,7 +52,8 @@ public class Juego {
     @NotNull(message = "Debe elegir un tipo de juego")
     @With
     private TipoJuegoEntity tipo;
-    private String caracteristicas;
+    @Convert(converter = ConversionLista.class)
+    private List<String> caracteristicas;
 
 
 }
