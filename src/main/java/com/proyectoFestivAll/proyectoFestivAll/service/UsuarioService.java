@@ -51,5 +51,9 @@ public class UsuarioService {
         return usuarioRepository.findByRut(rut);
     }
 
+    public boolean usuarioExiste(String rut){
+        return usuarioRepository.existsByRut(rut);
+    }
+
 
 }

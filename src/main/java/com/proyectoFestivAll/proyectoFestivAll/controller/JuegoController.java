@@ -19,6 +19,7 @@ import java.util.Optional;
 @RequestMapping("/api/juegos")
 @Validated
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class JuegoController {
 
     @Autowired
@@ -80,6 +81,18 @@ public class JuegoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo de juego no encontrado");
         }
         return ResponseEntity.ok(juegos);
+    }
+
+    @PutMapping("/{id}/caracteristica")
+    public ResponseEntity<Juego> actualizarCaracteristicas(@PathVariable Long id, @RequestBody List<String> nuevaCaracteristicas){
+        Optional<Juego> optionalJuego = juegoService.buscarJuegoId(id);
+        if (!optionalJuego.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+        Juego juego = optionalJuego.get();
+        juego.setCaracteristicas(nuevaCaracteristicas);
+        juegoService.guardarJuego(juego);
+        return ResponseEntity.ok(juego);
     }
 
 

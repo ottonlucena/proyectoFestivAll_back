@@ -25,20 +25,22 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> guardarUsuario(@Valid @RequestBody Usuario usuario){
+    public ResponseEntity<?> guardarUsuario(@Valid @RequestBody Usuario usuario){
+        if (usuarioService.usuarioExiste(usuario.getRut())){
+            return ResponseEntity.badRequest().body("El RUT ya existe: " + usuario.getRut());
+        }
         Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioGuardado);
     }
 
     @PutMapping
     public ResponseEntity<String> actualizarUsuario(@RequestBody Usuario usuario) throws GlobalNotFoundException{
-             Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuario(usuario.getId());
-        if (usuarioBuscado.isPresent()){
-            usuarioService.actualizarUsuario(usuario);
-            return ResponseEntity.ok("Usuario con id: " + usuario.getId() + " actualizado");
-        } else {
+        Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuario(usuario.getId());
+        if (usuarioBuscado.isEmpty()){
             return ResponseEntity.notFound().build();
         }
+        usuarioService.actualizarUsuario(usuario);
+        return ResponseEntity.ok("Usuario con id: " + usuario.getId() + " actualizado");
     }
 
     @GetMapping("/{id}")
