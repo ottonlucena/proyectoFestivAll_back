@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/tipo-juegos")
+@RequestMapping("api/category")
 public class TipoJuegoController {
 
     @Autowired
@@ -31,4 +31,20 @@ public class TipoJuegoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/{name}")
+    public ResponseEntity<String> deleteGameType(@PathVariable String name){
+        tipoJuegoService.deleteGameType(name);
+        return ResponseEntity.status(HttpStatus.OK).body("Tipo de juego " + name + " eliminado correctamente");
+    }
+
+    @PutMapping("/{name}")
+    public ResponseEntity<TipoJuegoEntity> updateGameType(@PathVariable String name, @RequestBody TipoJuegoEntity tipoJuego){
+        TipoJuegoEntity updateGameType = tipoJuegoService.updateGameType(name, tipoJuego);
+        return ResponseEntity.status(HttpStatus.OK).body(updateGameType);
+
+
+    }
+
+
 }

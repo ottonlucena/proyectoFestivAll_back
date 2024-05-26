@@ -18,6 +18,8 @@ public class TipoJuegoEntity {
     private Long id;
     @NotBlank(message = "El nombre del tipo de juego no puede estar vacio")
     @Column(unique = true)
-    private String nombre;
+    private String title;
+    private String description;
+    private String img_url;
 
 }

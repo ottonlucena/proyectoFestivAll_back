@@ -22,8 +22,10 @@ public class Usuario {
     @NotBlank(message = "Por favor ingresar un rut")
     private String rut;
     @Length(min = 3, max = 15)
+    @NotBlank(message = "Por favor ingresar nombre")
     private String nombre;
     @Length(min = 3, max = 15)
+    @NotBlank(message = "Por favor ingresar apellido")
     private String apellido;
     private String telefono;
     @NotBlank(message = "Por favor ingresar un correo electronico")

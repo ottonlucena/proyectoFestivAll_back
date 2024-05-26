@@ -1,7 +1,8 @@
 package com.proyectoFestivAll.proyectoFestivAll.controller;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
-import com.proyectoFestivAll.proyectoFestivAll.entity.TipoJuegoEntity;
+import com.proyectoFestivAll.proyectoFestivAll.exception.JuegoNoEncontradoException;
+import com.proyectoFestivAll.proyectoFestivAll.exception.TipoJuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.TipoJuegoRepository;
 import com.proyectoFestivAll.proyectoFestivAll.service.JuegoService;
 import jakarta.validation.Valid;
@@ -34,22 +35,18 @@ public class JuegoController {
 
     @PostMapping
     public ResponseEntity<?> guardarJuego(@Valid @RequestBody Juego juego){
-        String nombreTipoJuego = juego.getTipo().getNombre();
-        if(!tipoJuegoRepository.existsByNombre(nombreTipoJuego)){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El tipo de juego " + nombreTipoJuego + " no existe");
-        }
-
         Juego juegoGuardado = juegoService.guardarJuego(juego);
         return ResponseEntity.status(HttpStatus.CREATED).body(juegoGuardado);
     }
 
     @PutMapping
     public ResponseEntity<String> actualizarJuego(@RequestBody Juego juego){
-        Optional<Juego> juegoOptional = juegoService.buscarJuegoId(juego.getId());
-        if (juegoOptional.isPresent()){
+        try{
             juegoService.actualizarJuego(juego);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Juego id " + juego.getId() + " actualizado");
-        }else {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Juego con id " + juego.getId() + " actualizado");
+        }catch (TipoJuegoNoEncontradoException exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }catch (JuegoNoEncontradoException exception){
             return ResponseEntity.notFound().build();
         }
     }

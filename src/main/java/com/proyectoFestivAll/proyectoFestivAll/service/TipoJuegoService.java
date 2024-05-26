@@ -2,6 +2,7 @@ package com.proyectoFestivAll.proyectoFestivAll.service;
 
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.TipoJuegoEntity;
+import com.proyectoFestivAll.proyectoFestivAll.exception.TipoJuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.TipoJuegoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,27 @@ public class TipoJuegoService {
     }
 
     public TipoJuegoEntity agregarTipoJuego(TipoJuegoEntity tipoJuego){
-        if (tipoJuegoRepository.existsByNombre(tipoJuego.getNombre())){
+        if (tipoJuegoRepository.existsByTitle(tipoJuego.getTitle())){
             throw new IllegalArgumentException("El tipo de juego ya existe");
         }
         return tipoJuegoRepository.save(tipoJuego);
+    }
+
+    public TipoJuegoEntity findByTypeGame(String name){
+        return tipoJuegoRepository.findByTitle(name)
+                .orElseThrow(() -> new TipoJuegoNoEncontradoException("Game type " + name + " no found"));
+    }
+
+    public void deleteGameType(String name){
+        TipoJuegoEntity tipoJuego = findByTypeGame(name);
+        tipoJuegoRepository.delete(tipoJuego);
+    }
+
+    public TipoJuegoEntity updateGameType(String name,TipoJuegoEntity tipoJuego){
+        TipoJuegoEntity existingGameType = findByTypeGame(name);
+        existingGameType.setDescription(tipoJuego.getDescription());
+        existingGameType.setTitle(tipoJuego.getTitle());
+        existingGameType.setImg_url(tipoJuego.getImg_url());
+        return tipoJuegoRepository.save(existingGameType);
     }
 }
