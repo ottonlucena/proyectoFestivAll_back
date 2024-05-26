@@ -39,6 +39,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
+    /*@ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String,String>> handleConstraintViolationException (ConstraintViolationException exception){
+        Map<String,String > errors = new HashMap<>();
+        exception.getC
+    }*/
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String,Object> errors = new HashMap<>();

@@ -43,7 +43,7 @@ public class JuegoController {
     public ResponseEntity<String> actualizarJuego(@RequestBody Juego juego){
         try{
             juegoService.actualizarJuego(juego);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Juego con id " + juego.getId() + " actualizado");
+            return ResponseEntity.status(HttpStatus.OK).body("Juego con id " + juego.getId() + " actualizado");
         }catch (TipoJuegoNoEncontradoException exception){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }catch (JuegoNoEncontradoException exception){
