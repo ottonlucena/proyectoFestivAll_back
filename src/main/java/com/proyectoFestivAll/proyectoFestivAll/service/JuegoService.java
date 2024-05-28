@@ -7,6 +7,7 @@ import com.proyectoFestivAll.proyectoFestivAll.exception.TipoJuegoNoEncontradoEx
 import com.proyectoFestivAll.proyectoFestivAll.repository.JuegoRepository;
 import com.proyectoFestivAll.proyectoFestivAll.repository.TipoJuegoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class JuegoService {
         TipoJuegoEntity tipoJuego = tipoJuegoRepository.findByTitle(nombreTipoJuego)
                 .orElseThrow(() -> new TipoJuegoNoEncontradoException("Tipo de juego " + nombreTipoJuego + " no existe"));
 
+        juego.setTipo(tipoJuego);
         return juegoRepository.save(juego);
     }
 
@@ -48,8 +50,10 @@ public class JuegoService {
         TipoJuegoEntity tipoJuego = tipoJuegoRepository.findByTitle(nombreTipoJuego)
                 .orElseThrow(() -> new TipoJuegoNoEncontradoException("Tipo de juego " + nombreTipoJuego + " no existe"));
 
-        juego.setTipo(tipoJuego);
-        return juegoRepository.save(juego);
+        juegoExiste.setTipo(tipoJuego);
+
+        BeanUtils.copyProperties(juego,juegoExiste,"id", "tipo");
+        return juegoRepository.save(juegoExiste);
 
     }
     @Transactional

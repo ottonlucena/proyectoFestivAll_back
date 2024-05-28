@@ -40,7 +40,7 @@ public class JuegoController {
     }
 
     @PutMapping
-    public ResponseEntity<String> actualizarJuego(@RequestBody Juego juego){
+    public ResponseEntity<String> actualizarJuego(@RequestBody @Valid Juego juego){
         try{
             juegoService.actualizarJuego(juego);
             return ResponseEntity.status(HttpStatus.OK).body("Juego con id " + juego.getId() + " actualizado");

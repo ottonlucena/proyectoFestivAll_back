@@ -1,6 +1,7 @@
 package com.proyectoFestivAll.proyectoFestivAll.exception;
 
 import com.proyectoFestivAll.proyectoFestivAll.exception.dto.ErrorMessage;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -39,11 +40,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
-    /*@ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String,String>> handleConstraintViolationException (ConstraintViolationException exception){
         Map<String,String > errors = new HashMap<>();
-        exception.getC
-    }*/
+        exception.getConstraintViolations().forEach(constraintViolation -> {
+            String fieldName = constraintViolation.getPropertyPath().toString();
+            String errorMessage = constraintViolation.getMessage();
+            errors.put(fieldName,errorMessage);
+        });
+        return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
