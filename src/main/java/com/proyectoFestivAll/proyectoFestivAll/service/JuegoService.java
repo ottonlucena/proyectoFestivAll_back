@@ -61,8 +61,8 @@ public class JuegoService {
        juegoRepository.deleteById(id);
     }
 
-    public List<Juego> buscarJuegosPorTipo(String tipo){
-        return juegoRepository.findByTipoTitle(tipo);
+    public List<Juego> buscarJuegosPorTipo(List<String> tipos){
+        return juegoRepository.findByTipo_TitleIn(tipos);
     }
 
 

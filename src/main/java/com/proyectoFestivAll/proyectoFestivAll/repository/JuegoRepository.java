@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface JuegoRepository extends JpaRepository<Juego, Long> {
 
-    List<Juego> findByTipoTitle(String tipo);
+    List<Juego> findByTipo_TitleIn(List<String> tipos);
 }

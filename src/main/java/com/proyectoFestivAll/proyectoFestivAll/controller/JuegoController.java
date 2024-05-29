@@ -72,8 +72,8 @@ public class JuegoController {
 
 
     @GetMapping("/type")
-    public ResponseEntity<?> getGamesByType(@RequestParam("type") String tipo) {
-        List<Juego> juegos = juegoService.buscarJuegosPorTipo(tipo);
+    public ResponseEntity<?> getGamesByType(@RequestParam("type") List<String> tipos) {
+        List<Juego> juegos = juegoService.buscarJuegosPorTipo(tipos);
         if (juegos.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo de juego no encontrado");
         }
