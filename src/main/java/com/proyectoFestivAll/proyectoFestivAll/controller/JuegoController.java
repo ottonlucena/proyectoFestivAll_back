@@ -3,6 +3,7 @@ package com.proyectoFestivAll.proyectoFestivAll.controller;
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
 import com.proyectoFestivAll.proyectoFestivAll.exception.JuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.exception.TipoJuegoNoEncontradoException;
+import com.proyectoFestivAll.proyectoFestivAll.exception.dto.ErrorMessage;
 import com.proyectoFestivAll.proyectoFestivAll.repository.TipoJuegoRepository;
 import com.proyectoFestivAll.proyectoFestivAll.service.JuegoService;
 import jakarta.validation.Valid;
@@ -40,34 +41,31 @@ public class JuegoController {
     }
 
     @PutMapping
-    public ResponseEntity<String> actualizarJuego(@RequestBody @Valid Juego juego){
+    public ResponseEntity<?> actualizarJuego(@RequestBody @Valid Juego juego){
         try{
             juegoService.actualizarJuego(juego);
-            return ResponseEntity.status(HttpStatus.OK).body("Juego con id " + juego.getId() + " actualizado");
+            return ResponseEntity.status(HttpStatus.OK).body(juego);
         }catch (TipoJuegoNoEncontradoException exception){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+            ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }catch (JuegoNoEncontradoException exception){
-            return ResponseEntity.notFound().build();
+            ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarJuego(@PathVariable Long id){
-        Optional<Juego> buscarJuego = juegoService.buscarJuegoId(id);
-        if (buscarJuego.isPresent()){
-            juegoService.eliminarJuego(id);
-            return ResponseEntity.ok("Juego con id: " + id + " eliminado correctamente" );
-        }else {
-            return ResponseEntity.notFound().build();
-        }
+        Juego juego = juegoService.buscarJuegoId(id);
+        juegoService.eliminarJuego(id);
+        return ResponseEntity.ok("Juego con id " + id + " eliminado correctamente");
 
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Juego> obtenerJuegoPorId(@PathVariable Long id) {
-        Optional<Juego> juegoOptional = juegoService.buscarJuegoId(id);
-        return juegoOptional.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Juego juego = juegoService.buscarJuegoId(id);
+        return ResponseEntity.ok(juego);
     }
 
 
@@ -80,17 +78,7 @@ public class JuegoController {
         return ResponseEntity.ok(juegos);
     }
 
-    @PutMapping("/{id}/caracteristica")
-    public ResponseEntity<Juego> actualizarCaracteristicas(@PathVariable Long id, @RequestBody List<String> nuevaCaracteristicas){
-        Optional<Juego> optionalJuego = juegoService.buscarJuegoId(id);
-        if (!optionalJuego.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        Juego juego = optionalJuego.get();
-        juego.setCaracteristicas(nuevaCaracteristicas);
-        juegoService.guardarJuego(juego);
-        return ResponseEntity.ok(juego);
-    }
+
 
 
 }

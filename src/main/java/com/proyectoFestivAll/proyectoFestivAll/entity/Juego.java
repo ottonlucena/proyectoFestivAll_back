@@ -1,6 +1,5 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
-import com.proyectoFestivAll.proyectoFestivAll.converter.ConversionLista;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -51,7 +50,13 @@ public class Juego {
     @NotNull(message = "Debe elegir un tipo de juego")
     @With
     private TipoJuegoEntity tipo;
-    @Convert(converter = ConversionLista.class)
-    private List<String> caracteristicas;
+    @ManyToMany
+    @JoinTable(
+            name = "juego_caracteristicas",
+            joinColumns = @JoinColumn(name = "juego_id"),
+            inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
+    )
+    @Column(name = "caracteristicas")
+    private List<Caracteristica> caracteristicas;
 
 }

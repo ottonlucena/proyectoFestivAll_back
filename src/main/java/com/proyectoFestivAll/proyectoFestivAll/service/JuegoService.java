@@ -23,6 +23,7 @@ public class JuegoService {
 
     private final TipoJuegoRepository tipoJuegoRepository;
 
+    @Transactional
     public Juego guardarJuego(Juego juego){
         String nombreTipoJuego = juego.getTipo().getTitle();
 
@@ -33,14 +34,16 @@ public class JuegoService {
         return juegoRepository.save(juego);
     }
 
-    public Optional<Juego> buscarJuegoId(Long id){
-        return juegoRepository.findById(id);
+    public Juego buscarJuegoId(Long id){
+       return juegoRepository.findById(id)
+               .orElseThrow(()->  new JuegoNoEncontradoException("Juego con id: " + id + " no encontrado"));
     }
 
     public List<Juego> listarJuegos(){
         return juegoRepository.findAll();
     }
 
+    @Transactional
     public Juego actualizarJuego(Juego juego){
         String nombreTipoJuego = juego.getTipo().getTitle();
 
