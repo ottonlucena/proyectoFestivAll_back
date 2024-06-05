@@ -1,5 +1,7 @@
 package com.proyectoFestivAll.proyectoFestivAll.service;
 
+import com.proyectoFestivAll.proyectoFestivAll.entity.Valoracion;
+import com.proyectoFestivAll.proyectoFestivAll.repository.ValoracionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,21 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ValoracionService {
 
+    private final ValoracionRepository valoracionRepository;
+
     @Transactional
-    public String guardarValoracion() {
-        return "Chao Mundo";
+    public Valoracion guardarValoracion(Valoracion valoracion) {
+        return valoracionRepository.save(valoracion);
     }
-
-    //    @Transactional
-    //    public Juego guardarJuego(Juego juego){
-    //        String nombreTipoJuego = juego.getTipo().getTitle();
-    //
-    //        TipoJuegoEntity tipoJuego = tipoJuegoRepository.findByTitle(nombreTipoJuego)
-    //                .orElseThrow(() -> new TipoJuegoNoEncontradoException("Tipo de juego " + nombreTipoJuego + " no existe"));
-    //
-    //        juego.setTipo(tipoJuego);
-    //        return juegoRepository.save(juego);
-    //    }
-
-    // Aquí puedes agregar otros métodos para manejar la lógica de negocio relacionada con Valoracion.
 }

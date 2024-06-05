@@ -1,5 +1,6 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -14,17 +15,16 @@ import lombok.*;
 @ToString
 @Table(name = "valoracion")
 public class Valoracion {
+    @JsonIgnore
     @Id
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id", nullable = false)
-    @NotNull(message = "Debe ingresar un usuario")
-    private Usuario usuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "juego_id", referencedColumnName = "juego_id", nullable = false)
+    @NotNull(message = "Debe ingresar un usuario")
+    private Long usuario_id;
+
     @NotNull(message = "Debe ingresar un juego")
-    private Juego juego;
+    private Long juego_id;
 
     @NotNull(message = "Debe ingresar una valoración")
     @Min(value = 1, message = "La valoración mínima es 1")
