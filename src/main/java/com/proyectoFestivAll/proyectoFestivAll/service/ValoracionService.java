@@ -37,7 +37,7 @@ public class ValoracionService {
 
     @Transactional
     public Map<String, Object> obtenerValoracionesYPromedio(int juegoId) {
-        String queryStr = "SELECT j.juego_id, j.promedio_valoracion AS promedio, u.nombre, v.valoracion, v.fecha, v.comentario " +
+        String queryStr = "SELECT j.juego_id, j.promedio_valoracion AS promedio, j.cantidad_valoraciones AS cantidadValoraciones, u.nombre, v.valoracion, v.fecha, v.comentario " +
                 "FROM valoracion v " +
                 "JOIN usuarios u ON v.usuario_id = u.usuario_id " +
                 "JOIN juegos j ON v.juego_id = j.juego_id " +
@@ -51,22 +51,25 @@ public class ValoracionService {
         Map<String, Object> response = new HashMap<>();
         List<Map<String, Object>> valoraciones = new ArrayList<>();
         double promedio = 0;
+        int cantidadValoraciones = 0;
 
         if (!results.isEmpty()) {
             promedio = ((Number) results.get(0)[1]).doubleValue();
+            cantidadValoraciones = ((Number) results.get(0)[2]).intValue();
         }
 
         for (Object[] result : results) {
             Map<String, Object> detalle = new HashMap<>();
-            detalle.put("nombre", result[2]);
-            detalle.put("valoracion", result[3]);
-            detalle.put("fecha", ((java.sql.Date) result[4]).toLocalDate());
-            detalle.put("comentario", result[5]);
+            detalle.put("nombre", result[3]);
+            detalle.put("valoracion", result[4]);
+            detalle.put("fecha", ((java.sql.Date) result[5]).toLocalDate());
+            detalle.put("comentario", result[6]);
             valoraciones.add(detalle);
         }
 
         response.put("juego_id", juegoId);
         response.put("promedio", promedio);
+        response.put("cantidad_valoraciones", cantidadValoraciones);
         response.put("valoraciones", valoraciones);
 
         return response;
