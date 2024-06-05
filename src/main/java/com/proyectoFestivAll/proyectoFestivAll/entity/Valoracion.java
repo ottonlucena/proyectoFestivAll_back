@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +32,6 @@ public class Valoracion {
     private int valoracion;
 
     private String comentario;
+
+    private LocalDate fecha;
 }

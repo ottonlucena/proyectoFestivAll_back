@@ -1,12 +1,14 @@
 package com.proyectoFestivAll.proyectoFestivAll.service;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Valoracion;
+import com.proyectoFestivAll.proyectoFestivAll.repository.ValoracionRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,19 +19,28 @@ import java.util.Map;
 public class ValoracionService {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    private final ValoracionRepository valoracionRepository;
 
     @Transactional
     public Valoracion guardarValoracion(Valoracion valoracion) {
-        String query = "INSERT INTO valoracion (usuario_id, juego_id, valoracion, comentario) " +
-                "VALUES (:usuarioId, :juegoId, :valoracion, :comentario) " +
-                "ON DUPLICATE KEY UPDATE valoracion = :valoracion, comentario = :comentario";
+        // Establecer la fecha actual si no está presente
+        if (valoracion.getFecha() == null) {
+            valoracion.setFecha(LocalDate.now());
+        }
+
+        // Inserción o actualización de la valoración
+        String query = "INSERT INTO valoracion (usuario_id, juego_id, valoracion, comentario, fecha) " +
+                "VALUES (:usuarioId, :juegoId, :valoracion, :comentario, :fecha) " +
+                "ON DUPLICATE KEY UPDATE valoracion = :valoracion, comentario = :comentario, fecha = :fecha";
 
         entityManager.createNativeQuery(query)
                 .setParameter("usuarioId", valoracion.getUsuario_id())
                 .setParameter("juegoId", valoracion.getJuego_id())
                 .setParameter("valoracion", valoracion.getValoracion())
                 .setParameter("comentario", valoracion.getComentario())
+                .setParameter("fecha", valoracion.getFecha())
                 .executeUpdate();
 
         return valoracion;
