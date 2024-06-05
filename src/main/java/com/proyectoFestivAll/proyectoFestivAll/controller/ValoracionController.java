@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/valoracion")
 @Validated
@@ -18,5 +20,10 @@ public class ValoracionController {
     @PostMapping
     public Valoracion guardarYDevolverValoracion(@RequestBody Valoracion valoracion) {
         return valoracionService.guardarValoracion(valoracion);
+    }
+
+    @GetMapping("/{juegoId}")
+    public Map<String, Object> obtenerValoracionesYPromedio(@PathVariable int juegoId) {
+        return valoracionService.obtenerValoracionesYPromedio(juegoId);
     }
 }
