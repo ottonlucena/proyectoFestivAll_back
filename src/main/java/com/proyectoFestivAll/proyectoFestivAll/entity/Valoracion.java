@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +30,6 @@ public class Valoracion {
     @Min(value = 1, message = "La valoración mínima es 1")
     @Max(value = 5, message = "La valoración máxima es 5")
     private int valoracion;
+
+    private String comentario;
 }

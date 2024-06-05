@@ -16,14 +16,15 @@ public class ValoracionService {
 
     @Transactional
     public Valoracion guardarValoracion(Valoracion valoracion) {
-        String query = "INSERT INTO valoracion (usuario_id, juego_id, valoracion) " +
-                "VALUES (:usuarioId, :juegoId, :valoracion) " +
-                "ON DUPLICATE KEY UPDATE valoracion = :valoracion";
+        String query = "INSERT INTO valoracion (usuario_id, juego_id, valoracion, comentario) " +
+                "VALUES (:usuarioId, :juegoId, :valoracion, :comentario) " +
+                "ON DUPLICATE KEY UPDATE valoracion = :valoracion, comentario = :comentario";
 
         entityManager.createNativeQuery(query)
                 .setParameter("usuarioId", valoracion.getUsuario_id())
                 .setParameter("juegoId", valoracion.getJuego_id())
                 .setParameter("valoracion", valoracion.getValoracion())
+                .setParameter("comentario", valoracion.getComentario())
                 .executeUpdate();
 
         return valoracion;
