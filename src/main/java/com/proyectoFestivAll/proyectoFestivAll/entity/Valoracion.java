@@ -1,7 +1,9 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -14,16 +16,12 @@ import lombok.*;
 @Setter
 @ToString
 @Table(name = "valoracion")
+@IdClass(ValoracionId.class)
 public class Valoracion {
-    @JsonIgnore
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull(message = "Debe ingresar un usuario")
     private Long usuario_id;
 
-    @NotNull(message = "Debe ingresar un juego")
+    @Id
     private Long juego_id;
 
     @NotNull(message = "Debe ingresar una valoración")
