@@ -21,5 +21,6 @@ public class TipoJuegoEntity {
     private String title;
     private String description;
     private String img_url;
+    private String filtro;
 
 }

@@ -2,6 +2,7 @@ package com.proyectoFestivAll.proyectoFestivAll.service;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
 import com.proyectoFestivAll.proyectoFestivAll.entity.TipoJuegoEntity;
+import com.proyectoFestivAll.proyectoFestivAll.entity.dto.JuegoDTO;
 import com.proyectoFestivAll.proyectoFestivAll.exception.JuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.exception.TipoJuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.JuegoRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +68,13 @@ public class JuegoService {
 
     public List<Juego> buscarJuegosPorTipo(List<String> tipos){
         return juegoRepository.findByTipo_TitleIn(tipos);
+    }
+
+    public List<JuegoDTO> listarJuegosDTO(){
+        List<Juego> juegosList = juegoRepository.findAll();
+        return juegosList.stream()
+                .map(juego -> new JuegoDTO(juego.getId(),juego.getNombre()))
+                .collect(Collectors.toList());
     }
 
 

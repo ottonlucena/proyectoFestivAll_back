@@ -1,6 +1,7 @@
 package com.proyectoFestivAll.proyectoFestivAll.controller;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
+import com.proyectoFestivAll.proyectoFestivAll.entity.dto.JuegoDTO;
 import com.proyectoFestivAll.proyectoFestivAll.exception.JuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.exception.TipoJuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.exception.dto.ErrorMessage;
@@ -76,6 +77,12 @@ public class JuegoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo de juego no encontrado");
         }
         return ResponseEntity.ok(juegos);
+    }
+
+    @GetMapping("/suggestion")
+    public ResponseEntity<List<JuegoDTO>> listarJuegosDTO(){
+        List<JuegoDTO> juegoDTOS = juegoService.listarJuegosDTO();
+        return ResponseEntity.ok(juegoDTOS);
     }
 
 

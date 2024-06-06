@@ -44,6 +44,7 @@ public class TipoJuegoService {
         existingGameType.setDescription(tipoJuego.getDescription());
         existingGameType.setTitle(tipoJuego.getTitle());
         existingGameType.setImg_url(tipoJuego.getImg_url());
+        existingGameType.setFiltro(tipoJuego.getFiltro());
         return tipoJuegoRepository.save(existingGameType);
     }
 }
