@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,12 @@ public class FavoritoService {
         return favorito;
     }
 
+    @Transactional
+    public void eliminarFavorito(Map<String, Long> request) {
+        Long usuarioId = request.get("usuario_id");
+        Long juegoId = request.get("juego_id");
+        favoritoRepository.deleteById(new FavoritoId(usuarioId, juegoId));
+    }
     @Transactional
     public List<Favorito> obtenerFavoritosPorUsuario(Long usuarioId) {
         String queryStr = "SELECT f FROM Favorito f WHERE f.usuario_id = :usuarioId";

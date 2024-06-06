@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,12 +24,18 @@ public class FavoritoController {
         return favoritoService.guardarFavorito(favorito);
     }
 
+    @DeleteMapping
+    public String eliminarFavorito(@RequestBody Map<String, Long> request) {
+        favoritoService.eliminarFavorito(request);
+        return "Este favorito fue borrado";
+    }
+
     @GetMapping("/usuario/{usuarioId}")
     public List<Favorito> obtenerFavoritosPorUsuario(@PathVariable Long usuarioId) {
         return favoritoService.obtenerFavoritosPorUsuario(usuarioId);
     }
 
-    @GetMapping("/usuario/{usuarioId}/{juegoId}")
+    @GetMapping("/usuario/{usuarioId}/juego/{juegoId}")
     public Optional<Favorito> obtenerFavorito(@PathVariable Long usuarioId, @PathVariable Long juegoId) {
         return favoritoService.obtenerFavorito(usuarioId, juegoId);
     }
