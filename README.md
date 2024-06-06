@@ -26,4 +26,4 @@ curl --location 'http://localhost:8080/api/favoritos/usuario/2'
 
 ### Buscar favorito
 
-curl --location 'http://localhost:8080/api/favoritos/usuario/2/4'
+curl --location 'http://localhost:8080/api/favoritos/usuario/2/juego/5'
