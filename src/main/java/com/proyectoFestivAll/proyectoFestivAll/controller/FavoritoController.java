@@ -28,7 +28,7 @@ public class FavoritoController {
         return favoritoService.obtenerFavoritosPorUsuario(usuarioId);
     }
 
-    @GetMapping("/usuario/{usuarioId}/juego/{juegoId}")
+    @GetMapping("/usuario/{usuarioId}/{juegoId}")
     public Optional<Favorito> obtenerFavorito(@PathVariable Long usuarioId, @PathVariable Long juegoId) {
         return favoritoService.obtenerFavorito(usuarioId, juegoId);
     }
