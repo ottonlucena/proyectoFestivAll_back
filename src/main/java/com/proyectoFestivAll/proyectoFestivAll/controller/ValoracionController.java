@@ -22,9 +22,8 @@ public class ValoracionController {
         return valoracionService.guardarValoracion(valoracion);
     }
 
-    @PostMapping("/filter")
-    public Map<String, Object> obtenerValoracionesYPromedio(@RequestBody Map<String, Integer> request) {
-        int juegoId = request.get("juegoId");
+    @GetMapping("/filter/{juegoId}")
+    public Map<String, Object> obtenerValoracionesYPromedio(@PathVariable int juegoId) {
         return valoracionService.obtenerValoracionesYPromedio(juegoId);
     }
 }

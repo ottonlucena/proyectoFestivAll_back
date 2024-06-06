@@ -66,6 +66,7 @@ public class Juego {
             joinColumns = @JoinColumn(name = "juego_id"),
             inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
     )
+    @Column(name = "caracteristicas")
     private List<Caracteristica> caracteristicas;
 
     @Column(name = "promedio_valoracion", columnDefinition = "decimal(3,1) default 0.0")
