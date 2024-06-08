@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +25,7 @@ public class JuegoService {
     private final TipoJuegoRepository tipoJuegoRepository;
 
     @Transactional
-    public Juego guardarJuego(Juego juego){
+    public Juego guardarJuego(Juego juego) {
         String nombreTipoJuego = juego.getTipo().getTitle();
 
         TipoJuegoEntity tipoJuego = tipoJuegoRepository.findByTitle(nombreTipoJuego)
@@ -36,17 +35,17 @@ public class JuegoService {
         return juegoRepository.save(juego);
     }
 
-    public Juego buscarJuegoId(Long id){
-       return juegoRepository.findById(id)
-               .orElseThrow(()->  new JuegoNoEncontradoException("Juego con id: " + id + " no encontrado"));
+    public Juego buscarJuegoId(Long id) {
+        return juegoRepository.findById(id)
+                .orElseThrow(() -> new JuegoNoEncontradoException("Juego con id: " + id + " no encontrado"));
     }
 
-    public List<Juego> listarJuegos(){
+    public List<Juego> listarJuegos() {
         return juegoRepository.findAll();
     }
 
     @Transactional
-    public Juego actualizarJuego(Juego juego){
+    public Juego actualizarJuego(Juego juego) {
         String nombreTipoJuego = juego.getTipo().getTitle();
 
         Juego juegoExiste = juegoRepository.findById(juego.getId())
@@ -57,18 +56,19 @@ public class JuegoService {
 
         juegoExiste.setTipo(tipoJuego);
 
-        BeanUtils.copyProperties(juego,juegoExiste,"id", "tipo");
+        BeanUtils.copyProperties(juego, juegoExiste, "id", "tipo");
         return juegoRepository.save(juegoExiste);
-
     }
+
     @Transactional
-    public void eliminarJuego(Long id){
-       juegoRepository.deleteById(id);
+    public void eliminarJuego(Long id) {
+        juegoRepository.deleteById(id);
     }
 
-    public List<Juego> buscarJuegosPorTipo(List<String> tipos){
+    public List<Juego> buscarJuegosPorTipo(List<String> tipos) {
         return juegoRepository.findByTipo_TitleIn(tipos);
     }
+
 
     public List<JuegoDTO> listarJuegosDTO(){
         List<Juego> juegosList = juegoRepository.findAll();
@@ -76,6 +76,7 @@ public class JuegoService {
                 .map(juego -> new JuegoDTO(juego.getId(),juego.getNombre()))
                 .collect(Collectors.toList());
     }
+
 
 
 }

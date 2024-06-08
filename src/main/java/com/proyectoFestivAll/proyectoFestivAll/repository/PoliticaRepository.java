@@ -1,0 +1,13 @@
+package com.proyectoFestivAll.proyectoFestivAll.repository;
+
+import com.proyectoFestivAll.proyectoFestivAll.entity.Politica;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface PoliticaRepository extends JpaRepository<Politica, Long> {
+
+    List<Politica> findByJuegoId(Long juegoId);
+}
