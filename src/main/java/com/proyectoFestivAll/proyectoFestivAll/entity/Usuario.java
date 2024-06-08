@@ -33,8 +33,8 @@ public class Usuario {
     @Column(unique = true)
     private String email;
     private String direccion;
-    @OneToOne(mappedBy = "usuario")
-    private Pago pago;
+    /*@OneToOne(mappedBy = "usuario")
+    private Pago pago;*/
     @NotBlank(message = "Debe ingresar una constraseña")
     private String password;
 

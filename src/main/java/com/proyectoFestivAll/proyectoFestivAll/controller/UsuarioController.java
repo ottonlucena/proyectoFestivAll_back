@@ -35,13 +35,13 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<String> actualizarUsuario(@RequestBody Usuario usuario) throws GlobalNotFoundException{
+    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario) throws GlobalNotFoundException{
         Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuario(usuario.getId());
         if (usuarioBuscado.isEmpty()){
             return ResponseEntity.notFound().build();
         }
-        usuarioService.actualizarUsuario(usuario);
-        return ResponseEntity.ok("Usuario con id: " + usuario.getId() + " actualizado");
+        Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuario);
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioActualizado);
     }
 
     @GetMapping("/{id}")
