@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,14 +72,13 @@ public class JuegoService {
         return juegoRepository.findByTipo_TitleIn(tipos);
     }
 
+    @Transactional(readOnly = true)
+    public List<JuegoDTO> listarJuegosDTO() {
+        List<Juego> juegosListUnique = juegoRepository.findAllByNombreDistinct();
 
-    public List<JuegoDTO> listarJuegosDTO(){
-        List<Juego> juegosList = juegoRepository.findAll();
-        return juegosList.stream()
-                .map(juego -> new JuegoDTO(juego.getId(),juego.getNombre()))
+        return juegosListUnique.stream()
+                .map(juego -> new JuegoDTO(juego.getId(), juego.getNombre()))
                 .collect(Collectors.toList());
+
     }
-
-
-
 }
