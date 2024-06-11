@@ -81,4 +81,8 @@ public class JuegoService {
                 .collect(Collectors.toList());
 
     }
+
+    public List<Juego> buscarJuegoPorNombre(String nombre){
+        return juegoRepository.findByNombreContainingIgnoreCase(nombre);
+    }
 }
