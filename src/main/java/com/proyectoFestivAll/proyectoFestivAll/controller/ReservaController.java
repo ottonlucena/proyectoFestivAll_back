@@ -2,7 +2,6 @@ package com.proyectoFestivAll.proyectoFestivAll.controller;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
 import com.proyectoFestivAll.proyectoFestivAll.entity.Reserva;
-import com.proyectoFestivAll.proyectoFestivAll.entity.dto.JuegoDTO;
 import com.proyectoFestivAll.proyectoFestivAll.entity.dto.JuegoFechaDTO;
 import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
 import com.proyectoFestivAll.proyectoFestivAll.service.ReservaService;
@@ -12,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/reservas")

@@ -51,8 +51,9 @@ public class ReservaService {
     public Reserva createReserva(Reserva reserva){
         for (ReservaJuego reservaJuego : reserva.getReservaJuegos()){
             Juego juegoExistente = buscarJuegoExistente(reservaJuego.getJuego().getId());
-            juegoExistente.setValorArriendo(juegoExistente.getValorArriendo());
             verificarDisponibilidad(juegoExistente, reserva, reservaJuego.getCantidad());
+            reservaJuego.setJuego(juegoExistente);
+            reservaJuego.setReserva(reserva);
         }
         return reservaRepository.save(reserva);
        }
