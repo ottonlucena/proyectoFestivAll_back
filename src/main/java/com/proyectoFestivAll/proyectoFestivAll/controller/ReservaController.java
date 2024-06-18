@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/reservas")
@@ -39,6 +40,19 @@ public class ReservaController {
         List<Juego> juegosDisponibles = reservaService.JuegosDiponiblesFechas(juegoFechaDTO.getNombreJuego(), juegoFechaDTO.getFechaInicio(), juegoFechaDTO.getFechaFin());
         return ResponseEntity.ok(juegosDisponibles);
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarReserva(@PathVariable Long id) throws GlobalNotFoundException{
+        Reserva reservaBuscada = reservaService.buscarReservaId(id);
+        reservaService.EliminarReserva(reservaBuscada.getId());
+        return ResponseEntity.ok("Reserva eliminada");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Reserva> getReservaId(@PathVariable Long id) throws GlobalNotFoundException{
+        Reserva reservaBuscada = reservaService.buscarReservaId(id);
+        return ResponseEntity.ok(reservaBuscada);
     }
 
 

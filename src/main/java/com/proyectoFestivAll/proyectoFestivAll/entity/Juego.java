@@ -1,5 +1,6 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -71,4 +72,5 @@ public class Juego {
 
     @Column(name = "promedio_valoracion", columnDefinition = "decimal(3,1) default 0.0")
     private float promedioValoracion;
+
 }

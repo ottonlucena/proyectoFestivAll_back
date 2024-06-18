@@ -2,6 +2,7 @@ package com.proyectoFestivAll.proyectoFestivAll.service;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
 import com.proyectoFestivAll.proyectoFestivAll.entity.Reserva;
+import com.proyectoFestivAll.proyectoFestivAll.entity.ReservaJuego;
 import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
 import com.proyectoFestivAll.proyectoFestivAll.exception.InsufficientQuantityException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.ReservaRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,42 +25,37 @@ public class ReservaService {
     @Autowired
    private JuegoService juegoService;
 
-    public Reserva createReserva(Reserva reserva){
-       for (Juego juego : reserva.getJuegos()){
-           Juego juegoExistente = juegoService.buscarJuegoId(juego.getId());
+    //METODOS INTERNOS
+    private Juego buscarJuegoExistente(Long juegoId){
+        Juego juegoExistente = juegoService.buscarJuegoId(juegoId);
+        if (juegoExistente == null){
+            throw new EntityNotFoundException("El juego con id " + juegoId + " no existe");
+        }
+        return juegoExistente;
+    }
 
-           if (juegoExistente == null){
-               throw new EntityNotFoundException("El juego con ID " + juego.getId() + " no existe");
-           }
-
-        List<Reserva> reservaExists = reservaRepository.findByJuegoIdAndFecha(juegoExistente.getId(),reserva.getFecha());
-
-        int cantReserva = reservaExists.stream()
-                .mapToInt(Reserva::getCantidadJuego)
+    private void verificarDisponibilidad(Juego juegoExistente, Reserva reserva, int cantidad){
+        List<Reserva> reservaList = reservaRepository.findByReservaJuegos_Juego_IdAndFecha(juegoExistente.getId(), reserva.getFecha());
+        int cantidadReservada = reservaList.stream()
+                .mapToInt(r -> r.getReservaJuegos().stream()
+                        .filter(rj -> rj.getJuego().getId().equals(juegoExistente.getId()))
+                        .mapToInt(ReservaJuego::getCantidad)
+                        .sum())
                 .sum();
 
-           // Añadir mensajes de depuración para ver valores
-           System.out.println("Juego ID: " + juegoExistente.getId());
-           System.out.println("Cantidad total reservada en la fecha: " + cantReserva);
-           System.out.println("Cantidad solicitada: " + reserva.getCantidadJuego());
-           System.out.println("Cantidad disponible del juego: " + juegoExistente.getCantidad());
-           // Dentro del bucle for
-           System.out.println("Reservas existentes para el juego en la fecha dada: " + reservaExists);
-           System.out.println("Cantidad total reservada en la fecha: " + cantReserva);
-           System.out.println("Cantidad solicitada para la reserva: " + reserva.getCantidadJuego());
-           System.out.println("Cantidad disponible del juego: " + juegoExistente.getCantidad());
-           System.out.println("Cantidad disponible del juego: " + juego.getCantidad());
-           System.out.println("Cantidad disponible del juego: " + reserva.getJuegos().get(0).getId());
-
-
-           if (cantReserva + reserva.getCantidadJuego() > juegoExistente.getCantidad()){
-            throw new InsufficientQuantityException("No hay suficiente cantidad de juegos disponibles para la reserva");
+        if (cantidadReservada + cantidad > juegoExistente.getCantidad()){
+            throw new InsufficientQuantityException(("No hay suficiente cantidad de juegos disponibles."));
         }
-
-       }
-
-        return reservaRepository.save(reserva);
     }
+
+    public Reserva createReserva(Reserva reserva){
+        for (ReservaJuego reservaJuego : reserva.getReservaJuegos()){
+            Juego juegoExistente = buscarJuegoExistente(reservaJuego.getJuego().getId());
+            juegoExistente.setValorArriendo(juegoExistente.getValorArriendo());
+            verificarDisponibilidad(juegoExistente, reserva, reservaJuego.getCantidad());
+        }
+        return reservaRepository.save(reserva);
+       }
 
     public List<Reserva> reservaList() throws GlobalNotFoundException {
         List<Reserva> reservaList = reservaRepository.findAll();
@@ -82,13 +79,29 @@ public class ReservaService {
         }
 
         Set<Long> juegosReservados = reservas.stream()
-                .flatMap(reserva -> reserva.getJuegos().stream())
-                .map(Juego::getId)
+                .flatMap(reserva -> reserva.getReservaJuegos().stream())
+                .collect(Collectors.groupingBy(reservaJuego -> reservaJuego.getJuego().getId(),
+                        Collectors.summingInt(ReservaJuego::getCantidad)))
+                .entrySet().stream()
+                .filter(entry -> {
+                    Juego juego = buscarJuegoExistente(entry.getKey());
+                    return entry.getValue() >= juego.getCantidad();
+                })
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
 
         return juegosBuscados.stream()
                 .filter(juego -> !juegosReservados.contains(juego.getId()))
                 .collect(Collectors.toList());
+    }
+
+    public void EliminarReserva(Long id){
+         reservaRepository.deleteById(id);
+    }
+
+    public Reserva buscarReservaId(Long id) throws GlobalNotFoundException{
+       return reservaRepository.findById(id)
+               .orElseThrow(() -> new GlobalNotFoundException("Reserva con id " + id + " no encontrada"));
     }
 
 }

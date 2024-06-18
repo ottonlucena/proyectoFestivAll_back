@@ -1,12 +1,13 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,38 +21,34 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserva_id")
     private Long id;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @NotNull
-    @JoinTable(
-            name = "reserva_juegos",
-            joinColumns = @JoinColumn(name = "reserva_id"),
-            inverseJoinColumns = @JoinColumn(name = "juego_id")
-    )
-    private List<Juego> juegos;
+
+    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference("reserva-reservaJuego")
+    private List<ReservaJuego> reservaJuegos = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonBackReference("usuario-reserva")
     private Usuario usuario;
+
     @NotNull
     private LocalDate fecha;
-    @NotNull
-    @Column(name = "hora_inicio" )
-    private LocalTime horaInicio;
-    @NotNull
-    @Column(name = "hora_termino" )
-    private LocalTime horaTermino;
+
     @Column(name = "total", nullable = false)
     private float total;
-    @Column(name = "cantidad_juego", nullable = false )
-    @NotNull
-    @Positive(message = "La cantidad de juegos debe ser un valor positivo")
-    private int cantidadJuego;
 
+    @Column(name = "cantidad_juego", nullable = false )
+    private int cantidadJuego;
     @PrePersist
     @PreUpdate
     private void calcularTotal(){
-        this.total = (float) this.juegos.stream()
-                .mapToDouble(Juego::getValorArriendo)
-                .sum()*this.cantidadJuego;
+        this.total = (float) this.reservaJuegos.stream()
+                .mapToDouble(rj -> rj.getJuego().getValorArriendo() * rj.getCantidad())
+                .sum();
+
+        this.cantidadJuego = this.reservaJuegos.stream()
+                .mapToInt(ReservaJuego::getCantidad)
+                .sum();
     }
 
 
