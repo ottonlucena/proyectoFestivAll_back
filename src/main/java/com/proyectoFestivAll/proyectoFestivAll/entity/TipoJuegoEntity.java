@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "tipo_juegos")
 public class TipoJuegoEntity {
     @Id

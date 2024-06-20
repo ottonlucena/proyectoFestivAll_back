@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ import java.util.List;
 @Getter
 @Setter
 public class Reserva {
+    private static final Logger logger = LoggerFactory.getLogger(Reserva.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserva_id")
@@ -32,7 +36,12 @@ public class Reserva {
     private Usuario usuario;
 
     @NotNull
-    private LocalDate fecha;
+    @Column(name = "fecha_inicio")
+    private LocalDate fechaInicio;
+
+    @NotNull
+    @Column(name = "fecha_fin")
+    private LocalDate fechaFin;
 
     @Column(name = "total", nullable = false)
     private float total;
@@ -41,15 +50,20 @@ public class Reserva {
     private int cantidadJuego;
     @PrePersist
     @PreUpdate
-    private void calcularTotal(){
+    public void calcularTotal(){
+        logger.info("Ejecutando calcularTotal");
+        logger.info("ReservaJuegos size: {}", this.reservaJuegos.size());
         this.total = (float) this.reservaJuegos.stream()
                 .mapToDouble(rj -> rj.getJuego().getValorArriendo() * rj.getCantidad())
                 .sum();
 
+        System.out.println("ejecuantado calcular");
+
         this.cantidadJuego = this.reservaJuegos.stream()
                 .mapToInt(ReservaJuego::getCantidad)
                 .sum();
+        logger.info("Total calculado: {}", this.total);
+        logger.info("Cantidad de juegos calculada: {}", this.cantidadJuego);
     }
-
 
 }

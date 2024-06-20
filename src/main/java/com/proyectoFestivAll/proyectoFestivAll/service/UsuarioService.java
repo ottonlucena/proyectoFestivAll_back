@@ -46,14 +46,17 @@ public class UsuarioService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Usuario> buscarUsuarioRut(String rut){
         return usuarioRepository.findByRut(rut);
     }
-
+    @Transactional(readOnly = true)
     public boolean usuarioExiste(String rut){
         return usuarioRepository.existsByRut(rut);
     }
-
+    @Transactional(readOnly = true)
+    public List<Usuario> buscarUsuariosConReservas(){
+        return usuarioRepository.findUsuariosConReservas();
+    }
 
 }

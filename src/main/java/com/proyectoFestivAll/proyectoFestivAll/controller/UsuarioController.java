@@ -71,6 +71,12 @@ public class UsuarioController {
 
     }
 
+    @GetMapping("/reservas")
+    public ResponseEntity<List<Usuario>> obtenerUsuariosConReservas(){
+        List<Usuario> usuariosConReservas = usuarioService.buscarUsuariosConReservas();
+        return ResponseEntity.ok(usuariosConReservas);
+    }
+
 }
 
 

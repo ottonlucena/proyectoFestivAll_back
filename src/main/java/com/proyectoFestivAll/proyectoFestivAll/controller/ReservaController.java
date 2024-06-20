@@ -3,6 +3,7 @@ package com.proyectoFestivAll.proyectoFestivAll.controller;
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
 import com.proyectoFestivAll.proyectoFestivAll.entity.Reserva;
 import com.proyectoFestivAll.proyectoFestivAll.entity.dto.JuegoFechaDTO;
+import com.proyectoFestivAll.proyectoFestivAll.entity.dto.UsuarioDTO;
 import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
 import com.proyectoFestivAll.proyectoFestivAll.service.ReservaService;
 import jakarta.validation.Valid;
@@ -21,9 +22,9 @@ public class ReservaController {
     private ReservaService reservaService;
 
     @PostMapping
-    public ResponseEntity<Reserva> createReserva(@RequestBody @Valid Reserva reserva){
-        Reserva newReserva = reservaService.createReserva(reserva);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newReserva);
+    public ResponseEntity<UsuarioDTO> createReserva(@RequestBody @Valid UsuarioDTO usuarioReservaDTO){
+        UsuarioDTO usuarioDTO = reservaService.createReserva(usuarioReservaDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
     }
 
     @GetMapping
