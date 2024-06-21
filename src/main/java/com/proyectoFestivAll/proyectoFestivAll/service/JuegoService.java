@@ -24,7 +24,7 @@ public class JuegoService {
     private final TipoJuegoRepository tipoJuegoRepository;
 
     @Transactional
-    public Juego guardarJuego(Juego juego) {
+    public Juego guardarJuego(Juego juego){
         String nombreTipoJuego = juego.getTipo().getTitle();
 
         TipoJuegoEntity tipoJuego = tipoJuegoRepository.findByTitle(nombreTipoJuego)
