@@ -48,22 +48,6 @@ public class Reserva {
 
     @Column(name = "cantidad_juego", nullable = false )
     private int cantidadJuego;
-    @PrePersist
-    @PreUpdate
-    public void calcularTotal(){
-        logger.info("Ejecutando calcularTotal");
-        logger.info("ReservaJuegos size: {}", this.reservaJuegos.size());
-        this.total = (float) this.reservaJuegos.stream()
-                .mapToDouble(rj -> rj.getJuego().getValorArriendo() * rj.getCantidad())
-                .sum();
 
-        System.out.println("ejecuantado calcular");
-
-        this.cantidadJuego = this.reservaJuegos.stream()
-                .mapToInt(ReservaJuego::getCantidad)
-                .sum();
-        logger.info("Total calculado: {}", this.total);
-        logger.info("Cantidad de juegos calculada: {}", this.cantidadJuego);
-    }
 
 }

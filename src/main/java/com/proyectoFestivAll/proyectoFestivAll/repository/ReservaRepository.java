@@ -11,7 +11,6 @@ import java.util.List;
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findByReservaJuegos_Juego_IdAndFechaInicio(Long juegoId, LocalDate fecha);
     List<Reserva> findByFechaInicio(LocalDate fecha);
-
     List<Reserva> findByFechaInicioBetween(LocalDate startDate, LocalDate endDate);
-
+    List<Reserva> findByUsuarioIdAndFechaInicioAndFechaFin(Long usuarioId, LocalDate fechaInicio, LocalDate fechaFin);
 }
