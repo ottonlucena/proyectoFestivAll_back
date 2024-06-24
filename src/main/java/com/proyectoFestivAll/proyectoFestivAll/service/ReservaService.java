@@ -13,6 +13,7 @@ import com.proyectoFestivAll.proyectoFestivAll.exception.UsuarioNoEncontradoExce
 import com.proyectoFestivAll.proyectoFestivAll.repository.ReservaJuegoRepository;
 import com.proyectoFestivAll.proyectoFestivAll.repository.ReservaRepository;
 import com.proyectoFestivAll.proyectoFestivAll.repository.UsuarioRepository;
+import com.proyectoFestivAll.proyectoFestivAll.util.ConverteDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,18 +33,15 @@ public class ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
     @Autowired
-   private JuegoService juegoService;
+    private JuegoService juegoService;
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
     private ReservaJuegoRepository reservaJuegoRepository;
-    @Autowired
-    private UsuarioService usuarioService;
 
     //METODOS INTERNOS
 
-
-    private void verificarDisponibilidad(Juego juegoExistente, Reserva reserva, int cantidad){
+    private void verificarDisponibilidad(Juego juegoExistente, Reserva reserva, int cantidad) {
         List<Reserva> reservaList = reservaRepository.findByReservaJuegos_Juego_IdAndFechaInicio(juegoExistente.getId(), reserva.getFechaInicio());
         int cantidadReservada = reservaList.stream()
                 .mapToInt(r -> r.getReservaJuegos().stream()
@@ -52,7 +50,7 @@ public class ReservaService {
                         .sum())
                 .sum();
 
-        if (cantidadReservada + cantidad > juegoExistente.getCantidad()){
+        if (cantidadReservada + cantidad > juegoExistente.getCantidad()) {
             throw new InsufficientQuantityException(("No hay suficiente cantidad de juegos disponibles."));
         }
     }
@@ -70,21 +68,21 @@ public class ReservaService {
         reserva.setCantidadJuego(cantidadJuego);
     }
 
-    private Optional<Reserva> buscarReservaExistente(ReservaDTO reservaDTO, Usuario usuario){
+    private Optional<Reserva> buscarReservaExistente(ReservaDTO reservaDTO, Usuario usuario) {
         return usuario.getReservas().stream()
                 .filter(r -> r.getFechaInicio().equals(reservaDTO.getFechaInicio()) && r.getFechaFin().equals(reservaDTO.getFechaFin()))
                 .findFirst();
     }
 
-    private void agregarOActualizarReservaJuego(Reserva reserva,Juego juego, int cantidad){
+    private void agregarOActualizarReservaJuego(Reserva reserva, Juego juego, int cantidad) {
         Optional<ReservaJuego> reservaJuegoExistente = reserva.getReservaJuegos().stream()
                 .filter(rj -> rj.getJuego().getId().equals(juego.getId()))
-                        .findFirst();
+                .findFirst();
 
-        if (reservaJuegoExistente.isPresent()){
+        if (reservaJuegoExistente.isPresent()) {
             ReservaJuego reservaJuego = reservaJuegoExistente.get();
             reservaJuego.setCantidad(reservaJuego.getCantidad() + cantidad);
-        }else {
+        } else {
             ReservaJuego reservaJuego = new ReservaJuego();
             reservaJuego.setJuego(juego);
             reservaJuego.setReserva(reserva);
@@ -128,7 +126,7 @@ public class ReservaService {
                 verificarDisponibilidad(juego, reserva, reservaDTO.getCantidad());
 
                 // Verificar si el juego ya está en la reserva
-                agregarOActualizarReservaJuego(reserva,juego,reservaDTO.getCantidad());
+                agregarOActualizarReservaJuego(reserva, juego, reservaDTO.getCantidad());
             }
 
             // Calcular total y cantidad de juegos
@@ -138,18 +136,18 @@ public class ReservaService {
         // Guardar el usuario con las reservas actualizadas
         usuarioRepository.save(usuario);
 
-        return usuarioService.usuarioAUsuarioDTO(usuario);
+        return ConverteDTO.convertirUsuarioDTO(usuario);
     }
 
     public List<Reserva> reservaList() throws GlobalNotFoundException {
         List<Reserva> reservaList = reservaRepository.findAll();
-        if (reservaList.isEmpty()){
+        if (reservaList.isEmpty()) {
             throw new GlobalNotFoundException("No se encontraron reservas");
         }
         return reservaList;
     }
 
-    public List<Juego> JuegosDiponiblesFechas(String nombreJuego, LocalDate fechaInicio, LocalDate fechaFin){
+    public List<Juego> JuegosDiponiblesFechas(String nombreJuego, LocalDate fechaInicio, LocalDate fechaFin) {
         // Obtener los juegos que coinciden con el nombre
         List<Juego> juegosBuscados = juegoService.buscarJuegoPorNombre(nombreJuego);
         System.out.println("Juegos buscados: " + juegosBuscados);
@@ -195,13 +193,13 @@ public class ReservaService {
         return juegosDisponibles;
     }
 
-    public void EliminarReserva(Long id){
-         reservaRepository.deleteById(id);
+    public void EliminarReserva(Long id) {
+        reservaRepository.deleteById(id);
     }
 
-    public Reserva buscarReservaId(Long id) throws GlobalNotFoundException{
-       return reservaRepository.findById(id)
-               .orElseThrow(() -> new GlobalNotFoundException("Reserva con id " + id + " no encontrada"));
+    public Reserva buscarReservaId(Long id) throws GlobalNotFoundException {
+        return reservaRepository.findById(id)
+                .orElseThrow(() -> new GlobalNotFoundException("Reserva con id " + id + " no encontrada"));
     }
 
 }

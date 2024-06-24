@@ -16,6 +16,7 @@ public class UsuarioDTO {
     private String apellido;
     private String email;
     private List<ReservaDTO> reservasDTO;
+
     public UsuarioDTO() {
         this.reservasDTO = new ArrayList<>();
     }

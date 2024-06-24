@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface JuegoRepository extends JpaRepository<Juego, Long> {
 
     List<Juego> findByTipo_TitleIn(List<String> tipos);
+
     @Query("SELECT DISTINCT j FROM Juego j GROUP BY j.nombre")
     List<Juego> findAllByNombreDistinct();
 

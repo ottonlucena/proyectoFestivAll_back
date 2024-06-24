@@ -1,9 +1,6 @@
 package com.proyectoFestivAll.proyectoFestivAll.service;
 
-import com.proyectoFestivAll.proyectoFestivAll.entity.Reserva;
 import com.proyectoFestivAll.proyectoFestivAll.entity.Usuario;
-import com.proyectoFestivAll.proyectoFestivAll.entity.dto.ReservaDTO;
-import com.proyectoFestivAll.proyectoFestivAll.entity.dto.UsuarioDTO;
 import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,29 +16,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    //Metodos internos:
-    private UsuarioDTO convertirAUsuarioDTO(Usuario usuario){
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
-        usuarioDTO.setId(usuario.getId());
-        usuarioDTO.setNombre(usuario.getNombre());
-        usuarioDTO.setApellido(usuario.getApellido());
-        usuarioDTO.setEmail(usuario.getEmail());
-
-        List<ReservaDTO> reservaDTOS = new ArrayList<>();
-        for (Reserva reserva : usuario.getReservas()){
-            ReservaDTO reservaDTO = new ReservaDTO();
-            reservaDTO.setId(reserva.getId());
-            reservaDTO.setTituloJuego(reserva.getReservaJuegos().get(0).getJuego().getNombre());
-            reservaDTO.setFechaInicio(reserva.getFechaInicio());
-            reservaDTO.setFechaFin(reserva.getFechaFin());
-            reservaDTO.setCantidad(reserva.getReservaJuegos().get(0).getCantidad());
-            reservaDTOS.add(reservaDTO);
-
-        }
-        usuarioDTO.setReservasDTO(reservaDTOS);
-        return usuarioDTO;
-
-    }
     @Transactional
     public Usuario guardarUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
@@ -90,10 +63,5 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public List<Usuario> buscarUsuariosConReservas() {
         return usuarioRepository.findUsuariosConReservas();
-    }
-
-    @Transactional(readOnly = true)
-    public UsuarioDTO usuarioAUsuarioDTO(Usuario usuario){
-        return convertirAUsuarioDTO(usuario);
     }
 }

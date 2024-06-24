@@ -15,9 +15,6 @@ public class Pago {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pago_id")
     private Long id;
-    /*@OneToOne
-    @JoinColumn(name = "reserva_id")
-    private Reserva reserva;*/
     @OneToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;

@@ -26,7 +26,7 @@ public class PoliticaController {
     private PoliticaService politicaService;
 
     @PostMapping("/{juegoId}")
-    public ResponseEntity<?> guardarPolitica(@PathVariable Long juegoId, @Valid @RequestBody Politica politica){
+    public ResponseEntity<?> guardarPolitica(@PathVariable Long juegoId, @Valid @RequestBody Politica politica) {
         try {
             Politica politicaGuardada = politicaService.guardarPolitica(politica, juegoId);
             return ResponseEntity.status(HttpStatus.CREATED).body(politicaGuardada);

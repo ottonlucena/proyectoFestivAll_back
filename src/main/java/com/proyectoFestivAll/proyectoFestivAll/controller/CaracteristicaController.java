@@ -19,40 +19,40 @@ public class CaracteristicaController {
     CaracteristicaService caracteristicaService;
 
     @GetMapping
-    public List<Caracteristica> getAllCaracteristicas(){
+    public List<Caracteristica> getAllCaracteristicas() {
         return caracteristicaService.getAllCaracteristicas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Caracteristica> getCaracteristicaById(@PathVariable Long id){
+    public ResponseEntity<Caracteristica> getCaracteristicaById(@PathVariable Long id) {
         Caracteristica caracteristica = caracteristicaService.getCaracteristicaById(id);
         return ResponseEntity.ok(caracteristica);
     }
 
     @PostMapping
-    public ResponseEntity<Caracteristica> createCaracteristica(@RequestBody Caracteristica caracteristica){
+    public ResponseEntity<Caracteristica> createCaracteristica(@RequestBody Caracteristica caracteristica) {
         try {
             Caracteristica savedCaracteristica = caracteristicaService.saveCaracteristica(caracteristica);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCaracteristica);
-        }catch (CaracteristicaDuplicadaException e){
+        } catch (CaracteristicaDuplicadaException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Caracteristica> updateCaracteristica(@PathVariable Long id, @RequestBody Caracteristica caracteristica){
+    public ResponseEntity<Caracteristica> updateCaracteristica(@PathVariable Long id, @RequestBody Caracteristica caracteristica) {
         try {
             caracteristica.setId(id);
             Caracteristica updateCaracteristica = caracteristicaService.saveCaracteristica(caracteristica);
             return ResponseEntity.ok(updateCaracteristica);
-        }catch (CaracteristicaDuplicadaException e) {
+        } catch (CaracteristicaDuplicadaException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 
 
     @DeleteMapping("{id}")
-    public void deleteCaracteristica(@PathVariable Long id){
-          caracteristicaService.deleteCaracteristica(id);
+    public void deleteCaracteristica(@PathVariable Long id) {
+        caracteristicaService.deleteCaracteristica(id);
     }
 }

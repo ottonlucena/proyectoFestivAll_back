@@ -31,32 +31,32 @@ public class JuegoController {
     private final TipoJuegoRepository tipoJuegoRepository;
 
     @GetMapping
-    public List<Juego> listarJuegos(){
+    public List<Juego> listarJuegos() {
         return juegoService.listarJuegos();
     }
 
     @PostMapping
-    public ResponseEntity<?> guardarJuego(@Valid @RequestBody Juego juego){
+    public ResponseEntity<?> guardarJuego(@Valid @RequestBody Juego juego) {
         Juego juegoGuardado = juegoService.guardarJuego(juego);
         return ResponseEntity.status(HttpStatus.CREATED).body(juegoGuardado);
     }
 
     @PutMapping
-    public ResponseEntity<?> actualizarJuego(@RequestBody @Valid Juego juego){
-        try{
+    public ResponseEntity<?> actualizarJuego(@RequestBody @Valid Juego juego) {
+        try {
             juegoService.actualizarJuego(juego);
             return ResponseEntity.status(HttpStatus.OK).body(juego);
-        }catch (TipoJuegoNoEncontradoException exception){
+        } catch (TipoJuegoNoEncontradoException exception) {
             ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-        }catch (JuegoNoEncontradoException exception){
+        } catch (JuegoNoEncontradoException exception) {
             ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarJuego(@PathVariable Long id){
+    public ResponseEntity<String> eliminarJuego(@PathVariable Long id) {
         Juego juego = juegoService.buscarJuegoId(id);
         juegoService.eliminarJuego(id);
         return ResponseEntity.ok("Juego con id " + id + " eliminado correctamente");
@@ -73,19 +73,17 @@ public class JuegoController {
     @GetMapping("/type")
     public ResponseEntity<?> getGamesByType(@RequestParam("type") List<String> tipos) {
         List<Juego> juegos = juegoService.buscarJuegosPorTipo(tipos);
-        if (juegos.isEmpty()){
+        if (juegos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo de juego no encontrado");
         }
         return ResponseEntity.ok(juegos);
     }
 
     @GetMapping("/suggestion")
-    public ResponseEntity<List<JuegoDTO>> listarJuegosDTO(){
+    public ResponseEntity<List<JuegoDTO>> listarJuegosDTO() {
         List<JuegoDTO> juegoDTOS = juegoService.listarJuegosDTO();
         return ResponseEntity.ok(juegoDTOS);
     }
-
-
 
 
 }

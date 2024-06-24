@@ -22,7 +22,7 @@ public class ReservaController {
     private ReservaService reservaService;
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> createReserva(@RequestBody @Valid UsuarioDTO usuarioReservaDTO){
+    public ResponseEntity<UsuarioDTO> createReserva(@RequestBody @Valid UsuarioDTO usuarioReservaDTO) {
         UsuarioDTO usuarioDTO = reservaService.createReserva(usuarioReservaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
     }
@@ -34,21 +34,21 @@ public class ReservaController {
     }
 
     @PostMapping("/disponibles")
-    public ResponseEntity<List<Juego>> buscarJuegosDisponibles(@RequestBody @Valid JuegoFechaDTO juegoFechaDTO){
+    public ResponseEntity<List<Juego>> buscarJuegosDisponibles(@RequestBody @Valid JuegoFechaDTO juegoFechaDTO) {
         List<Juego> juegosDisponibles = reservaService.JuegosDiponiblesFechas(juegoFechaDTO.getNombreJuego(), juegoFechaDTO.getFechaInicio(), juegoFechaDTO.getFechaFin());
         return ResponseEntity.ok(juegosDisponibles);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarReserva(@PathVariable Long id) throws GlobalNotFoundException{
+    public ResponseEntity<?> eliminarReserva(@PathVariable Long id) throws GlobalNotFoundException {
         Reserva reservaBuscada = reservaService.buscarReservaId(id);
         reservaService.EliminarReserva(reservaBuscada.getId());
         return ResponseEntity.ok("Reserva eliminada");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reserva> getReservaId(@PathVariable Long id) throws GlobalNotFoundException{
+    public ResponseEntity<Reserva> getReservaId(@PathVariable Long id) throws GlobalNotFoundException {
         Reserva reservaBuscada = reservaService.buscarReservaId(id);
         return ResponseEntity.ok(reservaBuscada);
     }

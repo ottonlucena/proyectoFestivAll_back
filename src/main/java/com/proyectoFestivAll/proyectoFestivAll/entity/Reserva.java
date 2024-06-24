@@ -46,7 +46,7 @@ public class Reserva {
     @Column(name = "total", nullable = false)
     private float total;
 
-    @Column(name = "cantidad_juego", nullable = false )
+    @Column(name = "cantidad_juego", nullable = false)
     private int cantidadJuego;
 
 
