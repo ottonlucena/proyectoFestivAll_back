@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequestMapping("/api/juegos")
 @Validated
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class JuegoController {
 
     @Autowired

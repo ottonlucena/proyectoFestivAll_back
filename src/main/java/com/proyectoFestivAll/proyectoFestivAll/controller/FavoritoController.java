@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequestMapping("/api/favoritos")
 @Validated
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class FavoritoController {
 
     private final FavoritoService favoritoService;
