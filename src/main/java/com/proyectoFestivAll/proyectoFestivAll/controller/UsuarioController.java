@@ -2,6 +2,7 @@ package com.proyectoFestivAll.proyectoFestivAll.controller;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Usuario;
 import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
+import com.proyectoFestivAll.proyectoFestivAll.exception.UsuarioNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,29 +36,35 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario) throws GlobalNotFoundException {
-        Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuario(usuario.getId());
-        if (usuarioBuscado.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario) {
+        try {
+            Usuario usuarioBuscado = usuarioService.buscarUsuario(usuario.getId());
+            Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuarioBuscado);
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioActualizado);
+        }catch (UsuarioNoEncontradoException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.OK).body(usuarioActualizado);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuario(@PathVariable Long id) throws GlobalNotFoundException {
-        return ResponseEntity.ok(usuarioService.buscarUsuario(id).get());
+    public ResponseEntity<?> buscarUsuario(@PathVariable Long id) {
+        try {
+            Usuario usuarioBuscado = usuarioService.buscarUsuario(id);
+            return ResponseEntity.ok(usuarioBuscado);
+        }catch (UsuarioNoEncontradoException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarUsuario(@PathVariable Long id) throws GlobalNotFoundException {
-        Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuario(id);
-        if (usuarioBuscado.isPresent()) {
+    public ResponseEntity<String> eliminarUsuario(@PathVariable Long id) {
+        try {
             usuarioService.eliminarUsuario(id);
             return ResponseEntity.ok("Usuario eliminado");
-        } else {
-            return ResponseEntity.notFound().build();
+        }catch (UsuarioNoEncontradoException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
+
     }
 
     @GetMapping("/rut")

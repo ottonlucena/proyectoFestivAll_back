@@ -1,10 +1,9 @@
 package com.proyectoFestivAll.proyectoFestivAll.service;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Usuario;
-import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
+import com.proyectoFestivAll.proyectoFestivAll.exception.UsuarioNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +21,9 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Usuario> buscarUsuario(Long id) throws GlobalNotFoundException {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if (!usuarioOptional.isPresent()) {
-            throw new GlobalNotFoundException("Usuario no encontrado");
-        }
-        return usuarioOptional;
+    public Usuario buscarUsuario(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
     }
 
     @Transactional(readOnly = true)
@@ -41,13 +37,11 @@ public class UsuarioService {
     }
 
     @Transactional
-    public boolean eliminarUsuario(Long id) {
-        try {
-            usuarioRepository.deleteById(id);
-            return true;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
+    public void eliminarUsuario(Long id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new UsuarioNoEncontradoException("Usuario con id " + id + " no encontrado.");
         }
+        usuarioRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
