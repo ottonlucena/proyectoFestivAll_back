@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/politicas")
 @Validated
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class PoliticaController {
 
     @Autowired

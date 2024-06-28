@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("api/category")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class TipoJuegoController {
 
     @Autowired
