@@ -2,6 +2,7 @@ package com.proyectoFestivAll.proyectoFestivAll.service;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Juego;
 import com.proyectoFestivAll.proyectoFestivAll.entity.TipoJuegoEntity;
+import com.proyectoFestivAll.proyectoFestivAll.entity.dto.JuegoDTO;
 import com.proyectoFestivAll.proyectoFestivAll.exception.JuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.exception.TipoJuegoNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.JuegoRepository;
@@ -12,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,5 +70,19 @@ public class JuegoService {
 
     public List<Juego> buscarJuegosPorTipo(List<String> tipos) {
         return juegoRepository.findByTipo_TitleIn(tipos);
+    }
+
+    @Transactional(readOnly = true)
+    public List<JuegoDTO> listarJuegosDTO() {
+        List<Juego> juegosListUnique = juegoRepository.findAllByNombreDistinct();
+
+        return juegosListUnique.stream()
+                .map(juego -> new JuegoDTO(juego.getId(), juego.getNombre()))
+                .collect(Collectors.toList());
+
+    }
+
+    public List<Juego> buscarJuegoPorNombre(String nombre){
+        return juegoRepository.findByNombreContainingIgnoreCase(nombre);
     }
 }

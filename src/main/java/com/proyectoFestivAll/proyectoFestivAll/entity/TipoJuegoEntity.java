@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "tipo_juegos")
 public class TipoJuegoEntity {
     @Id
@@ -21,5 +20,6 @@ public class TipoJuegoEntity {
     private String title;
     private String description;
     private String img_url;
+    private String filtro;
 
 }

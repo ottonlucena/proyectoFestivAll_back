@@ -11,6 +11,8 @@ curl --location 'http://localhost:8080/api/favoritos' \
 }
 '
 
+
+
 ###  Borrar favoritos:
 
 curl --location --request DELETE 'http://localhost:8080/api/favoritos' \

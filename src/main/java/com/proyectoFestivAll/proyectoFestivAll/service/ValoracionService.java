@@ -30,6 +30,7 @@ public class ValoracionService {
             valoracion.setFecha(LocalDate.now());
         }
 
+
         // Inserción o actualización de la valoración
         String query = "INSERT INTO valoracion (usuario_id, juego_id, valoracion, comentario, fecha) " +
                 "VALUES (:usuarioId, :juegoId, :valoracion, :comentario, :fecha) " +

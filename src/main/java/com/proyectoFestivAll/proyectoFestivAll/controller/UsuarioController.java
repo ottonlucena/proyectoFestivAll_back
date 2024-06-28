@@ -2,6 +2,7 @@ package com.proyectoFestivAll.proyectoFestivAll.controller;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Usuario;
 import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
+import com.proyectoFestivAll.proyectoFestivAll.exception.UsuarioNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +15,20 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/usuarios")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> listarUsuarios(){
+    public List<Usuario> listarUsuarios() {
         return usuarioService.listarUsuarios();
     }
 
     @PostMapping
-    public ResponseEntity<?> guardarUsuario(@Valid @RequestBody Usuario usuario){
-        if (usuarioService.usuarioExiste(usuario.getRut())){
+    public ResponseEntity<?> guardarUsuario(@Valid @RequestBody Usuario usuario) {
+        if (usuarioService.usuarioExiste(usuario.getRut())) {
             return ResponseEntity.badRequest().body("El RUT ya existe: " + usuario.getRut());
         }
         Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
@@ -35,40 +36,52 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<String> actualizarUsuario(@RequestBody Usuario usuario) throws GlobalNotFoundException{
-        Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuario(usuario.getId());
-        if (usuarioBuscado.isEmpty()){
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario) {
+        try {
+            Usuario usuarioBuscado = usuarioService.buscarUsuario(usuario.getId());
+            Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuarioBuscado);
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioActualizado);
+        }catch (UsuarioNoEncontradoException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        usuarioService.actualizarUsuario(usuario);
-        return ResponseEntity.ok("Usuario con id: " + usuario.getId() + " actualizado");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuario(@PathVariable Long id) throws GlobalNotFoundException {
-        return ResponseEntity.ok(usuarioService.buscarUsuario(id).get());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarUsuario(@PathVariable Long id) throws GlobalNotFoundException{
-        Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuario(id);
-        if (usuarioBuscado.isPresent()) {
-            usuarioService.eliminarUsuario(id);
-            return ResponseEntity.ok("Usuario eliminado");
-        }else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> buscarUsuario(@PathVariable Long id) {
+        try {
+            Usuario usuarioBuscado = usuarioService.buscarUsuario(id);
+            return ResponseEntity.ok(usuarioBuscado);
+        }catch (UsuarioNoEncontradoException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarUsuario(@PathVariable Long id) {
+        try {
+            usuarioService.eliminarUsuario(id);
+            return ResponseEntity.ok("Usuario eliminado");
+        }catch (UsuarioNoEncontradoException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+
+    }
+
     @GetMapping("/rut")
-    public ResponseEntity<Usuario> buscarUsuarioRut(@RequestParam("rut") String rut){
+    public ResponseEntity<Usuario> buscarUsuarioRut(@RequestParam("rut") String rut) {
         Optional<Usuario> usuarioBuscado = usuarioService.buscarUsuarioRut(rut);
-        if (usuarioBuscado.isPresent()){
+        if (usuarioBuscado.isPresent()) {
             return ResponseEntity.ok(usuarioBuscado.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
+    }
+
+    @GetMapping("/reservas")
+    public ResponseEntity<List<Usuario>> obtenerUsuariosConReservas() {
+        List<Usuario> usuariosConReservas = usuarioService.buscarUsuariosConReservas();
+        return ResponseEntity.ok(usuariosConReservas);
     }
 
 }
