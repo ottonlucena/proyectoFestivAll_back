@@ -6,6 +6,7 @@ import com.proyectoFestivAll.proyectoFestivAll.repository.FavoritoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,40 +21,23 @@ public class FavoritoService {
     @PersistenceContext
     private final EntityManager entityManager;
 
+    @Autowired
     private final FavoritoRepository favoritoRepository;
 
     @Transactional
     public Favorito guardarFavorito(Favorito favorito) {
         // Inserción o actualización del favorito
-        String query = "INSERT INTO favoritos (usuario_id, juego_id, favorito) " +
-                "VALUES (:usuarioId, :juegoId, :favorito) " +
-                "ON DUPLICATE KEY UPDATE favorito = :favorito";
+//        String query = "INSERT INTO favoritos (usuario_id, juego_id, favorito) " +
+//                "VALUES (:usuarioId, :juegoId, :favorito) " +
+//                "ON DUPLICATE KEY UPDATE favorito = :favorito";
+//
+//        entityManager.createNativeQuery(query)
+//                .setParameter("usuarioId", favorito.getUsuario_id())
+//                .setParameter("juegoId", favorito.getJuego_id())
+//                .setParameter("favorito", favorito.isFavorito())
+//                .executeUpdate();
 
-        entityManager.createNativeQuery(query)
-                .setParameter("usuarioId", favorito.getUsuario_id())
-                .setParameter("juegoId", favorito.getJuego_id())
-                .setParameter("favorito", favorito.isFavorito())
-                .executeUpdate();
-
-        return favorito;
+        return favoritoRepository.save(favorito);
     }
 
-    @Transactional
-    public void eliminarFavorito(Map<String, Long> request) {
-        Long usuarioId = request.get("usuario_id");
-        Long juegoId = request.get("juego_id");
-        favoritoRepository.deleteById(new FavoritoId(usuarioId, juegoId));
-    }
-    @Transactional
-    public List<Favorito> obtenerFavoritosPorUsuario(Long usuarioId) {
-        String queryStr = "SELECT f FROM Favorito f WHERE f.usuario_id = :usuarioId";
-        return entityManager.createQuery(queryStr, Favorito.class)
-                .setParameter("usuarioId", usuarioId)
-                .getResultList();
-    }
-
-    @Transactional
-    public Optional<Favorito> obtenerFavorito(Long usuarioId, Long juegoId) {
-        return favoritoRepository.findById(new FavoritoId(usuarioId, juegoId));
-    }
 }

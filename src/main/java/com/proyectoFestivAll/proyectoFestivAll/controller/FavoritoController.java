@@ -24,19 +24,19 @@ public class FavoritoController {
         return favoritoService.guardarFavorito(favorito);
     }
 
-    @DeleteMapping
-    public String eliminarFavorito(@RequestBody Map<String, Long> request) {
-        favoritoService.eliminarFavorito(request);
-        return "Este favorito fue borrado";
-    }
-
-    @GetMapping("/usuario/{usuarioId}")
-    public List<Favorito> obtenerFavoritosPorUsuario(@PathVariable Long usuarioId) {
-        return favoritoService.obtenerFavoritosPorUsuario(usuarioId);
-    }
-
-    @GetMapping("/usuario/{usuarioId}/juego/{juegoId}")
-    public Optional<Favorito> obtenerFavorito(@PathVariable Long usuarioId, @PathVariable Long juegoId) {
-        return favoritoService.obtenerFavorito(usuarioId, juegoId);
-    }
+//    @DeleteMapping
+//    public String eliminarFavorito(@RequestBody Map<String, Long> request) {
+//        favoritoService.eliminarFavorito(request);
+//        return "Este favorito fue borrado";
+//    }
+//
+//    @GetMapping("/usuario/{usuarioId}")
+//    public List<Favorito> obtenerFavoritosPorUsuario(@PathVariable Long usuarioId) {
+//        return favoritoService.obtenerFavoritosPorUsuario(usuarioId);
+//    }
+//
+//    @GetMapping("/usuario/{usuarioId}/juego/{juegoId}")
+//    public Optional<Favorito> obtenerFavorito(@PathVariable Long usuarioId, @PathVariable Long juegoId) {
+//        return favoritoService.obtenerFavorito(usuarioId, juegoId);
+//    }
 }

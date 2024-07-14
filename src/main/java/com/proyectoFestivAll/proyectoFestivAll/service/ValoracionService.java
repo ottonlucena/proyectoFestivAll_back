@@ -5,14 +5,12 @@ import com.proyectoFestivAll.proyectoFestivAll.repository.ValoracionRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +19,7 @@ public class ValoracionService {
     @PersistenceContext
     private final EntityManager entityManager;
 
+    @Autowired
     private final ValoracionRepository valoracionRepository;
 
     @Transactional
@@ -30,21 +29,19 @@ public class ValoracionService {
             valoracion.setFecha(LocalDate.now());
         }
 
+        // Buscar una valoración existente por usuario_id y juego_id
+        Optional<Valoracion> valoracionExistente = valoracionRepository.findByUsuarioIdAndJuegoId(
+                valoracion.getUsuario().getId(), valoracion.getJuego().getId());
 
-        // Inserción o actualización de la valoración
-        String query = "INSERT INTO valoracion (usuario_id, juego_id, valoracion, comentario, fecha) " +
-                "VALUES (:usuarioId, :juegoId, :valoracion, :comentario, :fecha) " +
-                "ON DUPLICATE KEY UPDATE valoracion = :valoracion, comentario = :comentario, fecha = :fecha";
-
-        entityManager.createNativeQuery(query)
-                .setParameter("usuarioId", valoracion.getUsuario_id())
-                .setParameter("juegoId", valoracion.getJuego_id())
-                .setParameter("valoracion", valoracion.getValoracion())
-                .setParameter("comentario", valoracion.getComentario())
-                .setParameter("fecha", valoracion.getFecha())
-                .executeUpdate();
-
-        return valoracion;
+        if (valoracionExistente.isPresent()) {
+            Valoracion valoracionActualizada = valoracionExistente.get();
+            valoracionActualizada.setValoracion(valoracion.getValoracion());
+            valoracionActualizada.setComentario(valoracion.getComentario());
+            valoracionActualizada.setFecha(valoracion.getFecha());
+            return valoracionRepository.save(valoracionActualizada);
+        } else {
+            return valoracionRepository.save(valoracion);
+        }
     }
 
     @Transactional
