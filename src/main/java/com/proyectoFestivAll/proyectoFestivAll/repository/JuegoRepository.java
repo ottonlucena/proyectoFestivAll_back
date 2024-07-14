@@ -13,7 +13,7 @@ public interface JuegoRepository extends JpaRepository<Juego, Long> {
 
     List<Juego> findByTipo_TitleIn(List<String> tipos);
 
-    @Query("SELECT DISTINCT j FROM Juego j GROUP BY j.nombre")
+    @Query("SELECT DISTINCT j FROM Juego j GROUP BY j.nombre, j.id")
     List<Juego> findAllByNombreDistinct();
 
     List<Juego> findByNombreContainingIgnoreCase(String nombre);
