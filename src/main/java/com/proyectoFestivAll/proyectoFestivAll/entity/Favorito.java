@@ -1,10 +1,6 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -18,12 +14,14 @@ import lombok.*;
 @IdClass(FavoritoId.class)
 public class Favorito {
     @Id
-    @Column(name = "usuario_id")
-    private Long usuario_id;
+    @ManyToOne
+    @Column(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @Id
-    @Column(name = "juego_id")
-    private Long juego_id;
+    @ManyToOne
+    @Column(name = "juego_id", nullable = false)
+    private Juego juego;
 
     @NotNull(message = "El campo favorito no puede ser nulo")
     private boolean favorito;
