@@ -58,7 +58,7 @@ public class JuegoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarJuego(@PathVariable Long id) {
         Juego juego = juegoService.buscarJuegoId(id);
-        juegoService.eliminarJuego(id);
+        juegoService.eliminarJuego(juego.getId());
         return ResponseEntity.ok("Juego con id " + id + " eliminado correctamente");
 
     }
