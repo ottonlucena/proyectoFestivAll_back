@@ -11,14 +11,17 @@ import lombok.*;
 @Setter
 @ToString
 @Table(name = "favoritos")
-@IdClass(FavoritoId.class)
 public class Favorito {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "favorito_id")
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "juego_id", nullable = false)
     private Juego juego;
