@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "caracteristicas")
 public class Caracteristica {
     @Id

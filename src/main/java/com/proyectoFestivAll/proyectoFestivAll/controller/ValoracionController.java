@@ -12,7 +12,7 @@ import java.util.Map;
 @RequestMapping("/api/valoracion")
 @Validated
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class ValoracionController {
 
     private final ValoracionService valoracionService;

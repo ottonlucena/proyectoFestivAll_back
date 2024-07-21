@@ -1,9 +1,6 @@
 package com.proyectoFestivAll.proyectoFestivAll.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -18,13 +15,19 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Table(name = "valoracion")
-@IdClass(ValoracionId.class)
 public class Valoracion {
     @Id
-    private Long usuario_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "valoracion_id")
+    private Long id;
 
-    @Id
-    private Long juego_id;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "juego_id", nullable = false)
+    private Juego juego;
 
     @NotNull(message = "Debe ingresar una valoración")
     @Min(value = 1, message = "La valoración mínima es 1")

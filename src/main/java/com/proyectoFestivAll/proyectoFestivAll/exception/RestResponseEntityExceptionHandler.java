@@ -21,55 +21,69 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(GlobalNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> globalNotFoundException(GlobalNotFoundException exception){
+    public ResponseEntity<ErrorMessage> globalNotFoundException(GlobalNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(TipoJuegoNoEncontradoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> handleTipoJuegoNoEncontradoException(TipoJuegoNoEncontradoException exception){
+    public ResponseEntity<ErrorMessage> handleTipoJuegoNoEncontradoException(TipoJuegoNoEncontradoException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(JuegoNoEncontradoException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> handleJuegoNoEncontradoException(JuegoNoEncontradoException exception){
+    public ResponseEntity<ErrorMessage> handleJuegoNoEncontradoException(JuegoNoEncontradoException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(CaracteristicaNoEncontradaException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> handleCaracteristicaNoencontradaException(CaracteristicaNoEncontradaException exception){
+    public ResponseEntity<ErrorMessage> handleCaracteristicaNoencontradaException(CaracteristicaNoEncontradaException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(CaracteristicaDuplicadaException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> handleCaracteristicaDuplicadaException(CaracteristicaDuplicadaException exception){
+    public ResponseEntity<ErrorMessage> handleCaracteristicaDuplicadaException(CaracteristicaDuplicadaException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(InsufficientQuantityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> handleInsufficientQuantityException(InsufficientQuantityException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
+    @ExceptionHandler(UsuarioNoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorMessage> handleUsuarioNoEncontradoException(UsuarioNoEncontradoException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String,String>> handleConstraintViolationException (ConstraintViolationException exception){
-        Map<String,String > errors = new HashMap<>();
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException exception) {
+        Map<String, String> errors = new HashMap<>();
         exception.getConstraintViolations().forEach(constraintViolation -> {
             String fieldName = constraintViolation.getPropertyPath().toString();
             String errorMessage = constraintViolation.getMessage();
-            errors.put(fieldName,errorMessage);
+            errors.put(fieldName, errorMessage);
         });
-        return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        Map<String,Object> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->{
-            errors.put(error.getField(),error.getDefaultMessage());
+        Map<String, Object> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }

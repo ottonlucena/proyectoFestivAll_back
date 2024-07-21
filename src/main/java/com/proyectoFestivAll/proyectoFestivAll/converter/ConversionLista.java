@@ -17,19 +17,20 @@ public class ConversionLista implements AttributeConverter<List<String>, String>
 
         try {
             return objectMapper.writeValueAsString(strings);
-        }catch (JsonProcessingException err){
+        } catch (JsonProcessingException err) {
             throw new IllegalArgumentException("Error al convertir de lista a JSON", err);
         }
     }
 
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
-        if (dbData == null){
+        if (dbData == null) {
             return null;
         }
-        try{
-            return objectMapper.readValue(dbData, new TypeReference<List<String>>() {});
-        }catch (JsonProcessingException err){
+        try {
+            return objectMapper.readValue(dbData, new TypeReference<List<String>>() {
+            });
+        } catch (JsonProcessingException err) {
             throw new IllegalArgumentException("Error al convertir de JSON a lista", err);
         }
     }

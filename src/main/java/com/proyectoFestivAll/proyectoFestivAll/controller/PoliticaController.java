@@ -19,14 +19,14 @@ import java.util.List;
 @RequestMapping("/api/politicas")
 @Validated
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class PoliticaController {
 
     @Autowired
     private PoliticaService politicaService;
 
     @PostMapping("/{juegoId}")
-    public ResponseEntity<?> guardarPolitica(@PathVariable Long juegoId, @Valid @RequestBody Politica politica){
+    public ResponseEntity<?> guardarPolitica(@PathVariable Long juegoId, @Valid @RequestBody Politica politica) {
         try {
             Politica politicaGuardada = politicaService.guardarPolitica(politica, juegoId);
             return ResponseEntity.status(HttpStatus.CREATED).body(politicaGuardada);

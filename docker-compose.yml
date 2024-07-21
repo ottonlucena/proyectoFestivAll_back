@@ -1,0 +1,33 @@
+services:
+  spring-festivall-image:
+    image: spring-festivall-image
+    container_name: spring-festivall-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-network
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql
+    container_name: mysql_database
+    environment:
+      MYSQL_ROOT_PASSWORD: Admin123.
+      MYSQL_DATABASE: proyecto
+      MYSQL_USER: otton
+      MYSQL_PASSWORD: 1995
+    ports:
+      - "3307:3306"
+    networks:
+      - spring-network
+    volumes:
+      - mysql-volume:/var/lib/mysql
+
+networks:
+  spring-network:
+volumes:
+  mysql-volume:

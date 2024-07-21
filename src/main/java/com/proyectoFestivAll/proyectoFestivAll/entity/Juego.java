@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -13,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "juegos")
 public class Juego {
     @Id
@@ -71,4 +73,5 @@ public class Juego {
 
     @Column(name = "promedio_valoracion", columnDefinition = "decimal(3,1) default 0.0")
     private float promedioValoracion;
+
 }

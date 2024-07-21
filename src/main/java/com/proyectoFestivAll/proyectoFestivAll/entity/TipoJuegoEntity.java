@@ -9,17 +9,17 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "tipo_juegos")
 public class TipoJuegoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "tipo_juego_id")
     private Long id;
     @NotBlank(message = "El nombre del tipo de juego no puede estar vacio")
     @Column(unique = true)
     private String title;
     private String description;
     private String img_url;
+    private String filtro;
 
 }

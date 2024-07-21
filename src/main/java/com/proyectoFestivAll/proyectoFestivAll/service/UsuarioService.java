@@ -1,10 +1,9 @@
 package com.proyectoFestivAll.proyectoFestivAll.service;
 
 import com.proyectoFestivAll.proyectoFestivAll.entity.Usuario;
-import com.proyectoFestivAll.proyectoFestivAll.exception.GlobalNotFoundException;
+import com.proyectoFestivAll.proyectoFestivAll.exception.UsuarioNoEncontradoException;
 import com.proyectoFestivAll.proyectoFestivAll.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,43 +16,46 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Transactional
-    public Usuario guardarUsuario(Usuario usuario){
+    public Usuario guardarUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
+
     @Transactional(readOnly = true)
-    public Optional<Usuario> buscarUsuario(Long id) throws GlobalNotFoundException {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if (!usuarioOptional.isPresent()){
-            throw new GlobalNotFoundException("Usuario no encontrado");
-        }
-        return usuarioOptional;
+    public Usuario buscarUsuario(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado"));
     }
+
     @Transactional(readOnly = true)
-    public List<Usuario> listarUsuarios(){
+    public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
-    }
-    @Transactional
-    public Usuario actualizarUsuario(Usuario usuario){
-        return usuarioRepository.save(usuario);
-    }
-    @Transactional
-    public boolean eliminarUsuario(Long id){
-        try{
-            usuarioRepository.deleteById(id);
-            return true;
-        } catch (EmptyResultDataAccessException e){
-            return false;
-        }
     }
 
     @Transactional
-    public Optional<Usuario> buscarUsuarioRut(String rut){
+    public Usuario actualizarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void eliminarUsuario(Long id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new UsuarioNoEncontradoException("Usuario con id " + id + " no encontrado.");
+        }
+        usuarioRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Usuario> buscarUsuarioRut(String rut) {
         return usuarioRepository.findByRut(rut);
     }
 
-    public boolean usuarioExiste(String rut){
+    @Transactional(readOnly = true)
+    public boolean usuarioExiste(String rut) {
         return usuarioRepository.existsByRut(rut);
     }
 
-
+    @Transactional(readOnly = true)
+    public List<Usuario> buscarUsuariosConReservas() {
+        return usuarioRepository.findUsuariosConReservas();
+    }
 }
